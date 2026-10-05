@@ -1,23 +1,40 @@
 --[[
-	CypherUI elements.lua
-	Registers all element factories on a window:
-	Section, Label, Toggle, Button, Slider, Dropdown.
-	deps: { window, body, screenGui, Theme, Util, accent, nextOrder }
+	Layfield elements.lua
+	Registers the element factories on a tab:
+	Section, Label, Toggle, Button, Slider, Dropdown, Input, Paragraph, Keybind.
+	deps: { tab, frame, screenGui, Theme, Util, accent, search }
 ]]
 
 return function(deps)
 	local Theme, Util = deps.Theme, deps.Util
-	local window, body, screenGui = deps.window, deps.body, deps.screenGui
-	local accent, nextOrder = deps.accent, deps.nextOrder
+	local frame, screenGui = deps.frame, deps.screenGui
+	local accent, search, tab = deps.accent, deps.search, deps.tab
 	local UserInputService = game:GetService("UserInputService")
 
+	local order = 0
+	local function nextOrder()
+		order = order + 1
+		return order
+	end
+
+	local function register(f, name)
+		f.LayoutOrder = nextOrder()
+		f.Parent = frame
+		if name then
+			table.insert(search, {frame = f, name = name})
+		end
+	end
+
+	local function typingInBox()
+		return UserInputService:GetFocusedTextBox() ~= nil
+	end
+
 	-- ===== Section =====
-	function window:Section(txt)
+	function tab:Section(txt)
 		local f = Instance.new("Frame")
 		f.Size = UDim2.new(1, 0, 0, 20)
 		f.BackgroundTransparency = 1
-		f.LayoutOrder = nextOrder()
-		f.Parent = body
+		register(f)
 		Util.label(f, {
 			Position = UDim2.fromOffset(2, 2), Size = UDim2.new(1, -4, 1, 0),
 			Font = Enum.Font.GothamBold, TextSize = 11, TextColor3 = Theme.SubText,
@@ -26,12 +43,11 @@ return function(deps)
 	end
 
 	-- ===== Label =====
-	function window:Label(txt)
+	function tab:Label(txt)
 		local f = Instance.new("Frame")
 		f.Size = UDim2.new(1, 0, 0, 18)
 		f.BackgroundTransparency = 1
-		f.LayoutOrder = nextOrder()
-		f.Parent = body
+		register(f)
 		Util.label(f, {
 			Position = UDim2.fromOffset(2, 0), Size = UDim2.new(1, -4, 1, 0),
 			Font = Enum.Font.Gotham, TextSize = 12, TextColor3 = Theme.SubText,
@@ -40,7 +56,7 @@ return function(deps)
 	end
 
 	-- ===== Toggle =====
-	function window:Toggle(cfg)
+	function tab:Toggle(cfg)
 		local state = cfg.Default == true
 		local key = cfg.Keybind or nil
 		local rebinding = false
@@ -52,10 +68,9 @@ return function(deps)
 		card.Size = UDim2.new(1, 0, 0, 92)
 		card.AutoButtonColor = false
 		card.Text = ""
-		card.LayoutOrder = nextOrder()
+		register(card, cfg.Name)
 		Util.corner(card, 12)
 		Util.stroke(card, Theme.Stroke, 1, 0.4)
-		card.Parent = body
 
 		local iconBox = Instance.new("Frame")
 		iconBox.Size = UDim2.fromOffset(40, 40)
@@ -190,7 +205,7 @@ return function(deps)
 		end)
 
 		UserInputService.InputBegan:Connect(function(input, gp)
-			if gp or rebinding then return end
+			if gp or rebinding or typingInBox() then return end
 			if key and input.KeyCode == key then
 				obj:Set(not state)
 			end
@@ -201,7 +216,7 @@ return function(deps)
 	end
 
 	-- ===== Button =====
-	function window:Button(cfg)
+	function tab:Button(cfg)
 		local card = Instance.new("TextButton")
 		card.Name = cfg.Name or "Button"
 		card.BackgroundColor3 = Theme.Card
@@ -212,10 +227,9 @@ return function(deps)
 		card.TextSize = 14
 		card.TextColor3 = Theme.Text
 		card.Text = (cfg.Icon and (cfg.Icon .. "  ") or "") .. (cfg.Name or "Button")
-		card.LayoutOrder = nextOrder()
+		register(card, cfg.Name)
 		Util.corner(card, 11)
 		Util.stroke(card, Theme.Stroke, 1, 0.4)
-		card.Parent = body
 
 		card.MouseEnter:Connect(function()
 			Util.tween(card, {BackgroundColor3 = Theme.CardHover}, 0.15)
@@ -233,7 +247,7 @@ return function(deps)
 	end
 
 	-- ===== Slider =====
-	function window:Slider(cfg)
+	function tab:Slider(cfg)
 		local min = cfg.Min or 0
 		local max = cfg.Max or 100
 		local value = cfg.Default or min
@@ -244,10 +258,9 @@ return function(deps)
 		card.BackgroundColor3 = Theme.Card
 		card.BorderSizePixel = 0
 		card.Size = UDim2.new(1, 0, 0, 64)
-		card.LayoutOrder = nextOrder()
+		register(card, cfg.Name)
 		Util.corner(card, 11)
 		Util.stroke(card, Theme.Stroke, 1, 0.4)
-		card.Parent = body
 
 		Util.label(card, {
 			Position = UDim2.fromOffset(14, 8), Size = UDim2.new(1, -100, 0, 16),
@@ -332,11 +345,12 @@ return function(deps)
 	end
 
 	-- ===== Dropdown =====
-	function window:Dropdown(cfg)
+	function tab:Dropdown(cfg)
 		local options = cfg.Options or {}
 		local current = cfg.Default or (options[1] or "")
 		local open = false
 		local popup = nil
+		local awayConn = nil
 
 		local card = Instance.new("TextButton")
 		card.Name = cfg.Name or "Dropdown"
@@ -345,10 +359,9 @@ return function(deps)
 		card.Size = UDim2.new(1, 0, 0, 46)
 		card.AutoButtonColor = false
 		card.Text = ""
-		card.LayoutOrder = nextOrder()
+		register(card, cfg.Name)
 		Util.corner(card, 11)
 		Util.stroke(card, Theme.Stroke, 1, 0.4)
-		card.Parent = body
 
 		Util.label(card, {
 			Position = UDim2.fromOffset(14, 0), Size = UDim2.new(1, -120, 1, 0),
@@ -374,6 +387,10 @@ return function(deps)
 				popup = nil
 				open = false
 				chevron.Text = "v"
+				if awayConn then
+					awayConn:Disconnect()
+					awayConn = nil
+				end
 			end
 		end
 
@@ -439,8 +456,172 @@ return function(deps)
 					Util.tween(btn, {BackgroundColor3 = (opt == current) and Theme.Chip or Theme.Card}, 0.12)
 				end)
 			end
+
+			awayConn = UserInputService.InputBegan:Connect(function(input)
+				if input.UserInputType == Enum.UserInputType.MouseButton1 or input.UserInputType == Enum.UserInputType.Touch then
+					local p = input.Position
+					local ap, as = popup.AbsolutePosition, popup.AbsoluteSize
+					if p.X < ap.X or p.X > ap.X + as.X or p.Y < ap.Y or p.Y > ap.Y + as.Y then
+						close()
+					end
+				end
+			end)
 		end)
 
+		return obj
+	end
+
+	-- ===== Input =====
+	function tab:Input(cfg)
+		local card = Instance.new("Frame")
+		card.Name = cfg.Name or "Input"
+		card.BackgroundColor3 = Theme.Card
+		card.BorderSizePixel = 0
+		card.Size = UDim2.new(1, 0, 0, 46)
+		register(card, cfg.Name)
+		Util.corner(card, 11)
+		Util.stroke(card, Theme.Stroke, 1, 0.4)
+
+		Util.label(card, {
+			Position = UDim2.fromOffset(14, 0), Size = UDim2.new(1, -170, 1, 0),
+			Font = Enum.Font.GothamBold, TextSize = 13, TextColor3 = Theme.Text,
+			TextXAlignment = Enum.TextXAlignment.Left, Text = cfg.Name or "Input",
+		})
+
+		local box = Instance.new("TextBox")
+		box.AnchorPoint = Vector2.new(1, 0.5)
+		box.Position = UDim2.new(1, -12, 0.5, 0)
+		box.Size = UDim2.fromOffset(150, 28)
+		box.BackgroundColor3 = Theme.Chip
+		box.BorderSizePixel = 0
+		box.Font = Enum.Font.Gotham
+		box.TextSize = 13
+		box.TextColor3 = Theme.Text
+		box.PlaceholderText = cfg.Placeholder or "type here..."
+		box.PlaceholderColor3 = Theme.SubText
+		box.Text = cfg.Default or ""
+		box.ClearTextOnFocus = false
+		box.Parent = card
+		Util.corner(box, 8)
+		local bpad = Instance.new("UIPadding")
+		bpad.PaddingLeft = UDim.new(0, 8)
+		bpad.PaddingRight = UDim.new(0, 8)
+		bpad.Parent = box
+
+		box.FocusLost:Connect(function(enter)
+			if cfg.Callback then
+				cfg.Callback(box.Text, enter)
+			end
+		end)
+
+		local obj = {}
+		function obj:Set(text)
+			box.Text = tostring(text)
+		end
+		function obj:Get()
+			return box.Text
+		end
+		return obj
+	end
+
+	-- ===== Paragraph =====
+	function tab:Paragraph(cfg)
+		local card = Instance.new("Frame")
+		card.Name = cfg.Title or "Paragraph"
+		card.BackgroundColor3 = Theme.Card
+		card.BorderSizePixel = 0
+		card.AutomaticSize = Enum.AutomaticSize.Y
+		card.Size = UDim2.new(1, 0, 0, 0)
+		register(card, cfg.Title)
+		Util.corner(card, 11)
+		Util.stroke(card, Theme.Stroke, 1, 0.4)
+
+		local cardPad = Instance.new("UIPadding")
+		cardPad.PaddingBottom = UDim.new(0, 10)
+		cardPad.Parent = card
+
+		if cfg.Title then
+			Util.label(card, {
+				Position = UDim2.fromOffset(14, 10), Size = UDim2.new(1, -28, 0, 16),
+				Font = Enum.Font.GothamBold, TextSize = 13, TextColor3 = Theme.Text,
+				TextXAlignment = Enum.TextXAlignment.Left, Text = cfg.Title,
+			})
+		end
+		Util.label(card, {
+			Position = UDim2.fromOffset(14, cfg.Title and 30 or 10),
+			Size = UDim2.new(1, -28, 0, 0),
+			AutomaticSize = Enum.AutomaticSize.Y,
+			Font = Enum.Font.Gotham, TextSize = 12, TextColor3 = Theme.SubText,
+			TextXAlignment = Enum.TextXAlignment.Left, TextWrapped = true,
+			Text = cfg.Text or "",
+		})
+	end
+
+	-- ===== Keybind =====
+	function tab:Keybind(cfg)
+		local key = cfg.Default or nil
+		local rebinding = false
+
+		local card = Instance.new("Frame")
+		card.Name = cfg.Name or "Keybind"
+		card.BackgroundColor3 = Theme.Card
+		card.BorderSizePixel = 0
+		card.Size = UDim2.new(1, 0, 0, 46)
+		register(card, cfg.Name)
+		Util.corner(card, 11)
+		Util.stroke(card, Theme.Stroke, 1, 0.4)
+
+		Util.label(card, {
+			Position = UDim2.fromOffset(14, 0), Size = UDim2.new(1, -100, 1, 0),
+			Font = Enum.Font.GothamBold, TextSize = 13, TextColor3 = Theme.Text,
+			TextXAlignment = Enum.TextXAlignment.Left, Text = cfg.Name or "Keybind",
+		})
+
+		local chip = Instance.new("TextButton")
+		chip.AnchorPoint = Vector2.new(1, 0.5)
+		chip.Position = UDim2.new(1, -12, 0.5, 0)
+		chip.Size = UDim2.fromOffset(64, 26)
+		chip.BackgroundColor3 = Theme.Chip
+		chip.BorderSizePixel = 0
+		chip.Font = Enum.Font.GothamBold
+		chip.TextSize = 12
+		chip.TextColor3 = Theme.Text
+		chip.Text = key and key.Name or "--"
+		chip.AutoButtonColor = false
+		chip.Parent = card
+		Util.corner(chip, 8)
+
+		local obj = {}
+		chip.MouseButton1Click:Connect(function()
+			if rebinding then return end
+			rebinding = true
+			chip.Text = "..."
+			local conn
+			conn = UserInputService.InputBegan:Connect(function(input, gp)
+				if gp then return end
+				if input.UserInputType == Enum.UserInputType.Keyboard then
+					conn:Disconnect()
+					key = input.KeyCode
+					chip.Text = key.Name
+					rebinding = false
+				end
+			end)
+		end)
+
+		UserInputService.InputBegan:Connect(function(input, gp)
+			if gp or rebinding or typingInBox() then return end
+			if key and input.KeyCode == key then
+				if cfg.Callback then cfg.Callback() end
+			end
+		end)
+
+		function obj:SetKeybind(kc)
+			key = kc
+			chip.Text = key and key.Name or "--"
+		end
+		function obj:Get()
+			return key
+		end
 		return obj
 	end
 end

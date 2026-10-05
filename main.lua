@@ -1,5 +1,5 @@
 --[[
-	CypherUI loader (main.lua)
+	Layfield loader (main.lua)
 	Paste this whole file into your executor. It pulls the library
 	from this repo and opens a window you can build on.
 
@@ -18,16 +18,16 @@ local CONFIG = {
 }
 
 local function loadLibrary()
-	local src = game:HttpGet("https://raw.githubusercontent.com/kere0ne/CypherUI/main/src/init.lua")
+	local src = game:HttpGet("https://raw.githubusercontent.com/kere0ne/Layfield/main/src/init.lua")
 	local fn, err = loadstring(src)
 	if not fn then
-		error("[CypherUI] failed to compile init.lua: " .. tostring(err))
+		error("[Layfield] failed to compile init.lua: " .. tostring(err))
 	end
 	return fn()
 end
 
-local CypherUI = loadLibrary()
-local Window = CypherUI:CreateWindow(CONFIG)
+local Layfield = loadLibrary()
+local Window = Layfield:CreateWindow(CONFIG)
 
 --========================================================================
 --  YOUR FEATURES
@@ -35,7 +35,7 @@ local Window = CypherUI:CreateWindow(CONFIG)
 
 Window:Notify({
 	Title = CONFIG.Name,
-	Text = "loaded, " .. CypherUI.Version,
+	Text = "loaded, " .. Layfield.Version,
 	Icon = CONFIG.Icon,
 	Duration = 3,
 })

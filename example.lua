@@ -1,5 +1,5 @@
 --[[
-	CypherUI example.lua
+	Layfield example.lua
 	A full working demo: toggles (with working Inf Jump and Anti Ragdoll),
 	slider, dropdown, buttons, notifications.
 ]]
@@ -9,13 +9,13 @@ local UserInputService = game:GetService("UserInputService")
 local LocalPlayer = Players.LocalPlayer
 
 local function loadLibrary()
-	local src = game:HttpGet("https://raw.githubusercontent.com/kere0ne/CypherUI/main/src/init.lua")
+	local src = game:HttpGet("https://raw.githubusercontent.com/kere0ne/Layfield/main/src/init.lua")
 	return loadstring(src)()
 end
 
-local CypherUI = loadLibrary()
+local Layfield = loadLibrary()
 
-local Window = CypherUI:CreateWindow({
+local Window = Layfield:CreateWindow({
 	Name = "Kawatan Hub",
 	Subtitle = "anti-bat system",
 	Version = "v3.0",
@@ -136,7 +136,7 @@ Window:Button({
 	Name = "Unload GUI",
 	Icon = "x",
 	Callback = function()
-		CypherUI:Destroy()
+		Layfield:Destroy()
 	end,
 })
 

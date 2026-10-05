@@ -1,5 +1,5 @@
 --[[
-	CypherUI notify.lua
+	Layfield notify.lua
 	Toast notifications with icon, title, text and a countdown bar.
 	deps: { holder, Theme, Util, accent }
 ]]
