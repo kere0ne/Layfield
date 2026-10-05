@@ -79,7 +79,7 @@ return function(deps)
 	Util.corner(versionPill, 5)
 	Util.label(versionPill, {
 		Size = UDim2.fromScale(1, 1), Font = Enum.Font.GothamBold, TextSize = 9,
-		TextColor3 = Theme.SubText, Text = config.Version or "v2.2",
+		TextColor3 = Theme.SubText, Text = config.Version or "v2.3",
 	})
 
 	local minBtn = Instance.new("TextButton")
@@ -471,6 +471,16 @@ return function(deps)
 		Notify.make(cfg or {})
 	end
 
+
+	local mobileModule = fetch("mobile")
+	window.MobilePanel = function(_, cfg)
+		return mobileModule({
+			screenGui = screenGui,
+			Theme = Theme,
+			Util = Util,
+			accent = accent,
+		})(cfg or {})
+	end
 
 	-- restore saved config shortly after startup, once features exist
 	if config.SaveConfigs ~= false then

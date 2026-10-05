@@ -64,7 +64,7 @@
 <header>
   <div class="topbar">
     <div class="logo"><div class="mark">L</div>Layfield</div>
-    <span class="ver">v2.2</span>
+    <span class="ver">v2.3</span>
     <div class="spacer"></div>
     <a class="nav" href="#quickstart">Get started</a>
     <a class="nav" href="https://github.com/kere0ne/Layfield">GitHub</a>
@@ -87,6 +87,7 @@
   <a class="item" href="#keybind">Keybind</a>
   <a class="item" href="#sections">Section &amp; Label</a>
   <div class="group">Configuration</div>
+  <a class="item" href="#mobilepanel">Mobile panel</a>
   <a class="item" href="#notify">Notifications</a>
   <a class="item" href="#shortcuts">Shortcuts</a>
   <a class="item" href="#theming">Theming</a>
@@ -145,7 +146,7 @@
 local Window = Layfield:CreateWindow({
     Name = "My Hub",            -- title bar text
     Subtitle = "demo",               -- shown in toasts
-    Version = "v2.2",                -- version pill
+    Version = "v2.3",                -- version pill
     Icon = "E",                      -- letter in the accent badge
     AccentColor = Color3.fromRGB(68, 140, 255),
     ToggleKey = Enum.KeyCode.LeftControl,  -- key that minimizes the GUI
@@ -277,6 +278,20 @@ infJump:SetKeybind(Enum.KeyCode.J)  -- change the keybind from code</pre></div>
 <pre>Window:Section("Movement")     -- small uppercase divider heading
 Window:Label("drag the title bar to move the window")  -- dim helper text</pre></div>
 
+<h2 id="mobilepanel">Mobile panel</h2>
+<p>A quick-action button grid floating over gameplay, like mobile game hubs: big rounded buttons, draggable, on the left or right side.</p>
+<div class="code"><div class="bar"><span>lua</span><button onclick="cp(this)">copy</button></div>
+<pre>local Panel = Window:MobilePanel({ Side = "Right" })   -- or "Left"
+
+Panel:Button({ Name = "TP Down",   Callback = function() end })
+Panel:Button({ Name = "Reset",     Callback = function() end })
+Panel:Button({ Name = "Aim Assist", Callback = function() end })
+
+Panel:SetSide("Left")      -- move the whole grid from code
+Panel:SetVisible(false)    -- hide / show it
+Panel:Destroy()</pre></div>
+<p>Buttons auto-wrap onto a two-column grid (set <b>Columns</b> in the config for up to four), flash the accent color when pressed, and the panel drags by its empty space so button taps stay clean.</p>
+
 <h2 id="notify">Notifications</h2>
 <div class="code"><div class="bar"><span>lua</span><button onclick="cp(this)">copy</button></div>
 <pre>Window:Notify({
@@ -332,7 +347,7 @@ Window:LoadConfig("myconfig")   -- load a saved config from code</pre></div>
 <p>Every element in one place, ready to paste into the FEATURES block in <b>main.lua</b>:</p>
 <div class="code"><div class="bar"><span>lua</span><button onclick="cp(this)">copy</button></div>
 <pre>local Window = Layfield:CreateWindow({
-    Name = "My Hub", Version = "v2.2", Icon = "E",
+    Name = "My Hub", Version = "v2.3", Icon = "E",
     AccentColor = Color3.fromRGB(68, 140, 255),
 })
 

@@ -16,6 +16,7 @@ Layfield/
     ├── util.lua       # tween / corner / stroke / label helpers
     ├── window.lua     # window, header, tab bar, search, drag, minimize
     ├── elements.lua   # Toggle, Button, Slider, Dropdown, Input, Paragraph, Keybind, Section, Label
+    ├── mobile.lua     # mobile quick-action panel (draggable button grid)
     └── notify.lua     # toast notifications with countdown bar
 ```
 
@@ -33,7 +34,7 @@ Build your features under the FEATURES block in `main.lua` (templates for every 
 local Window = Layfield:CreateWindow({
     Name = "Layfield",
     Subtitle = "example hub",
-    Version = "v2.2",
+    Version = "v2.3",
     Icon = "E",
     AccentColor = Color3.fromRGB(45, 145, 255),
     ToggleKey = Enum.KeyCode.LeftControl,
@@ -76,6 +77,7 @@ Window:Notify({ Title = "Layfield", Text = "online", Icon = "E" })
 | `Window:Paragraph(cfg)` | Auto-growing text block `{Title, Text}` |
 | `Window:Keybind(cfg)` | Standalone keybind `{Name, Default, Callback}`, `:SetKeybind(kc)`, `:Get()` |
 | `Window:Section(txt)` / `Window:Label(txt)` | Dividers and helper text |
+| `Window:MobilePanel(cfg)` | Draggable quick-action button grid, `{Side = "Left"/"Right", Columns}`. `panel:Button({Name, Callback})`, `:SetSide()`, `:SetVisible()`, `:Destroy()` |
 | `Window:Notify(cfg)` | Toast `{Title, Text, Icon, Duration}` |
 | `Window:SelectTab(tab)` | Switch pages from code |
 | `Window:SaveConfig(name)` / `Window:LoadConfig(name)` | Config persistence via flags |

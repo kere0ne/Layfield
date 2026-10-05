@@ -8,7 +8,7 @@
 local CONFIG = {
 	Name = "Layfield",
 	Subtitle = "ui library",
-	Version = "v2.2",
+	Version = "v2.3",
 	Icon = "L",
 	AccentColor = Color3.fromRGB(68, 140, 255),
 	ToggleKey = Enum.KeyCode.LeftControl,
@@ -53,6 +53,13 @@ Movement:Button({ Name = "My Button", Callback = function() end })
 Movement:Paragraph({ Title = "Notes", Text = "multi-line text block" })
 
 Window:Button({ Name = "Unload GUI", Callback = function() Layfield:Destroy() end })
+
+-- Mobile quick-action panel (draggable button grid, Left or Right):
+local Panel = Window:MobilePanel({ Side = "Right" })
+Panel:Button({ Name = "TP Down", Callback = function() end })
+Panel:Button({ Name = "Reset", Callback = function() end })
+Panel:SetSide("Left")        -- move it from code, users can also drag it
+Panel:SetVisible(true)       -- or false to hide it
 ]]
 
 Window:Paragraph({
