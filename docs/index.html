@@ -3,59 +3,80 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Layfield Docs</title>
+<title>Layfield, the better UI library for Roblox scripts</title>
 <style>
   :root{
-    --bg:#0d0f16; --panel:#141724; --card:#1d2130; --border:rgba(255,255,255,.07);
-    --accent:#348eff; --text:#eef1fa; --sub:#949ab2; --mono:'SF Mono',ui-monospace,Menlo,Consolas,monospace;
+    --bg:#ffffff; --bg2:#fafafa; --border:#eaebee; --text:#111318; --sub:#5b6270;
+    --accent:#3b6ef6; --accent-soft:#eef3ff; --code-bg:#0f1119; --code-border:#1e2333;
   }
   *{margin:0;padding:0;box-sizing:border-box}
-  body{background:var(--bg);color:var(--text);font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Inter,Roboto,sans-serif;line-height:1.6}
-  a{color:var(--accent);text-decoration:none}
-  .wrap{display:flex;max-width:1200px;margin:0 auto}
-  nav{width:230px;flex-shrink:0;padding:32px 0 60px 24px;position:sticky;top:0;height:100vh;overflow-y:auto}
-  nav .logo{display:flex;align-items:center;gap:10px;margin-bottom:26px}
-  nav .mark{width:34px;height:34px;border-radius:10px;background:var(--accent);display:flex;align-items:center;justify-content:center;font-weight:800;color:#fff;font-size:17px}
-  nav .logo b{font-size:16px}
-  nav a.item{display:block;color:var(--sub);padding:5px 10px;border-radius:8px;font-size:13.5px;margin:1px 0}
-  nav a.item:hover{color:var(--text);background:var(--card)}
-  main{flex:1;max-width:820px;padding:32px 28px 90px 36px}
-  .hero{padding:26px 0 10px;border-bottom:1px solid var(--border);margin-bottom:34px}
-  .hero h1{font-size:34px;letter-spacing:-.5px}
-  .hero p{color:var(--sub);margin-top:6px;font-size:15.5px}
-  .pill{display:inline-block;background:var(--card);border:1px solid var(--border);color:var(--sub);font-size:12px;padding:3px 10px;border-radius:99px;margin-right:8px;margin-top:14px}
-  .pill b{color:var(--accent);font-weight:600}
-  h2{font-size:22px;margin:44px 0 12px;padding-top:10px;letter-spacing:-.3px}
-  h3{font-size:15.5px;margin:22px 0 8px;color:var(--text)}
-  p{color:var(--sub);font-size:14.5px;margin:8px 0}
+  html{scroll-behavior:smooth}
+  body{background:var(--bg);color:var(--text);font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Inter,Roboto,sans-serif;line-height:1.65;font-size:15px}
+  a{color:inherit;text-decoration:none}
+  header{position:sticky;top:0;background:rgba(255,255,255,.85);backdrop-filter:blur(10px);border-bottom:1px solid var(--border);z-index:50}
+  .topbar{max-width:1180px;margin:0 auto;display:flex;align-items:center;gap:14px;padding:0 24px;height:60px}
+  .logo{display:flex;align-items:center;gap:9px;font-weight:700;font-size:15.5px}
+  .mark{width:26px;height:26px;border-radius:8px;background:var(--accent);color:#fff;display:flex;align-items:center;justify-content:center;font-weight:800;font-size:13px}
+  .ver{font-size:11px;color:var(--accent);background:var(--accent-soft);border:1px solid #dbe6ff;padding:2px 8px;border-radius:99px;font-weight:600}
+  .topbar .spacer{flex:1}
+  .topbar a.nav{font-size:13.5px;color:var(--sub);padding:6px 10px;border-radius:8px}
+  .topbar a.nav:hover{color:var(--text);background:var(--bg2)}
+  .wrap{max-width:1180px;margin:0 auto;display:flex;align-items:flex-start}
+  nav{width:240px;flex-shrink:0;padding:34px 16px 80px 24px;position:sticky;top:60px;max-height:calc(100vh - 60px);overflow-y:auto}
+  .group{font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:.6px;color:var(--sub);margin:20px 0 6px 10px}
+  .group:first-child{margin-top:0}
+  nav a.item{display:block;color:var(--sub);padding:5px 10px;border-radius:7px;font-size:13.5px;margin:1px 0}
+  nav a.item:hover{color:var(--text);background:var(--bg2)}
+  main{flex:1;min-width:0;padding:38px 32px 100px 12px;max-width:760px}
+  .hero{padding-bottom:6px}
+  .hero h1{font-size:33px;letter-spacing:-.6px;line-height:1.2}
+  .hero p{color:var(--sub);margin-top:10px;font-size:16px;max-width:640px}
+  .cards{display:grid;grid-template-columns:1fr 1fr;gap:12px;margin:26px 0 8px}
+  .card{border:1px solid var(--border);border-radius:12px;padding:16px 16px 14px;background:var(--bg2)}
+  .card b{font-size:14px;display:block;margin-bottom:3px}
+  .card span{font-size:13px;color:var(--sub)}
+  .cta{display:flex;gap:10px;margin-top:20px}
+  .cta a.btn{background:var(--accent);color:#fff;font-size:13.5px;font-weight:600;padding:9px 16px;border-radius:9px}
+  .cta a.btn.ghost{background:var(--bg2);color:var(--text);border:1px solid var(--border)}
+  h2{font-size:21px;margin:46px 0 10px;padding-top:14px;letter-spacing:-.3px;border-top:1px solid var(--border)}
+  h2:first-of-type{border-top:none}
+  h3{font-size:15px;margin:20px 0 6px}
+  p{color:var(--sub);margin:8px 0}
   p b, li b{color:var(--text);font-weight:600}
-  ul{margin:8px 0 8px 20px;color:var(--sub);font-size:14.5px}
-  li{margin:4px 0}
-  .code{background:var(--panel);border:1px solid var(--border);border-radius:12px;margin:14px 0;overflow:hidden}
-  .code .bar{display:flex;justify-content:space-between;align-items:center;padding:7px 14px;border-bottom:1px solid var(--border)}
-  .code .bar span{font-size:11.5px;color:var(--sub);font-family:var(--mono)}
-  .code button{background:var(--card);border:1px solid var(--border);color:var(--sub);font-size:11px;padding:3px 10px;border-radius:6px;cursor:pointer;font-family:inherit}
-  .code button:hover{color:var(--text)}
-  .code pre{padding:14px 16px;overflow-x:auto;font-family:var(--mono);font-size:13px;line-height:1.55;color:#d7e2ff}
-  .code pre .c{color:#5e6683}
-  .code pre .k{color:#7db4ff}
-  .code pre .s{color:#9ee493}
+  ul,ol{margin:8px 0 8px 22px;color:var(--sub)}
+  li{margin:5px 0}
+  .code{background:var(--code-bg);border:1px solid var(--code-border);border-radius:12px;margin:14px 0;overflow:hidden}
+  .code .bar{display:flex;justify-content:space-between;align-items:center;padding:6px 14px;border-bottom:1px solid var(--code-border)}
+  .code .bar span{font-size:11.5px;color:#8a93ad;font-family:ui-monospace,Menlo,Consolas,monospace}
+  .code button{background:#1a2032;border:1px solid #2a3350;color:#aab3cf;font-size:11px;padding:3px 10px;border-radius:6px;cursor:pointer;font-family:inherit}
+  .code button:hover{color:#fff}
+  .code pre{padding:14px 16px;overflow-x:auto;font-family:ui-monospace,Menlo,Consolas,monospace;font-size:12.8px;line-height:1.6;color:#dbe4ff}
   table{width:100%;border-collapse:collapse;margin:12px 0;font-size:13.5px}
-  th{color:var(--sub);text-align:left;font-size:12px;text-transform:uppercase;letter-spacing:.4px;padding:8px 10px;border-bottom:1px solid var(--border)}
+  th{color:var(--sub);text-align:left;font-size:11.5px;text-transform:uppercase;letter-spacing:.5px;padding:8px 10px;border-bottom:1px solid var(--border)}
   td{padding:8px 10px;border-bottom:1px solid var(--border);color:var(--sub);vertical-align:top}
-  td:first-child{color:var(--text);font-family:var(--mono);font-size:12.5px;white-space:nowrap}
-  .note{background:var(--card);border-left:3px solid var(--accent);border-radius:0 10px 10px 0;padding:10px 14px;font-size:13.5px;color:var(--sub);margin:14px 0}
-  footer{border-top:1px solid var(--border);margin-top:60px;padding-top:18px;color:var(--sub);font-size:13px}
-  @media(max-width:860px){nav{display:none}.wrap{display:block}}
+  td:first-child{color:var(--text);font-family:ui-monospace,Menlo,monospace;font-size:12.3px;white-space:nowrap}
+  .note{background:var(--accent-soft);border:1px solid #dbe6ff;border-radius:11px;padding:11px 15px;font-size:13.5px;color:#33415e;margin:14px 0}
+  footer{border-top:1px solid var(--border);margin-top:70px;padding:18px 24px;color:var(--sub);font-size:13px;display:flex;gap:18px;max-width:1180px;margin-left:auto;margin-right:auto}
+  @media(max-width:900px){nav{display:none}.wrap{display:block}main{padding:28px 20px 60px;max-width:none}.cards{grid-template-columns:1fr}}
 </style>
 </head>
 <body>
+<header>
+  <div class="topbar">
+    <div class="logo"><div class="mark">L</div>Layfield</div>
+    <span class="ver">v2.1</span>
+    <div class="spacer"></div>
+    <a class="nav" href="#quickstart">Get started</a>
+    <a class="nav" href="https://github.com/kere0ne/Layfield">GitHub</a>
+  </div>
+</header>
 <div class="wrap">
 <nav>
-  <div class="logo"><div class="mark">L</div><b>Layfield</b></div>
-  <a class="item" href="#intro">Intro</a>
+  <div class="group">Overview</div>
+  <a class="item" href="#intro">Introduction</a>
   <a class="item" href="#quickstart">Quick start</a>
-  <a class="item" href="#window">Window config</a>
+  <div class="group">Building</div>
+  <a class="item" href="#window">Window</a>
   <a class="item" href="#tabs">Tabs &amp; search</a>
   <a class="item" href="#toggle">Toggle</a>
   <a class="item" href="#button">Button</a>
@@ -65,76 +86,87 @@
   <a class="item" href="#paragraph">Paragraph</a>
   <a class="item" href="#keybind">Keybind</a>
   <a class="item" href="#sections">Section &amp; Label</a>
+  <div class="group">Configuration</div>
   <a class="item" href="#notify">Notifications</a>
   <a class="item" href="#shortcuts">Shortcuts</a>
   <a class="item" href="#theming">Theming</a>
+  <div class="group">Community</div>
   <a class="item" href="#fullexample">Full example</a>
   <a class="item" href="#publish">Make it yours</a>
 </nav>
 <main>
 
 <div class="hero">
-  <h1>Layfield</h1>
-  <p>A modern script hub UI framework for Roblox. Rayfield-style layout, rebuilt better: tabs, live search, animated toggles, rebindable keybinds and toast notifications, all in a few small modules.</p>
-  <span class="pill">version <b>v2.0</b></span>
-  <span class="pill">lua / <b>luau</b></span>
-  <span class="pill">mobile <b>friendly</b></span>
+  <h1>The better UI library for Roblox scripts</h1>
+  <p>Layfield is a compact, smooth interface suite for executor scripts. Rayfield-style layout, rebuilt smaller and faster: tabs with live search, animated toggles, rebindable keybinds and toast notifications, all open source.</p>
+  <div class="cta">
+    <a class="btn" href="#quickstart">Get started</a>
+    <a class="btn ghost" href="https://github.com/kere0ne/Layfield">View source</a>
+  </div>
 </div>
 
-<h2 id="intro">Intro</h2>
-<p>Layfield is a UI library you drop into any Roblox executor script. You write features (toggles, sliders, buttons), it draws the window, handles dragging, keybinds, search and notifications. The library lives in this repo's <b>src/</b> modules and loads over the network, so pushing an update to the repo updates everyone using your loader.</p>
+<div class="cards">
+  <div class="card"><b>Compact by design</b><span>Rayfield-style title bar and tab sidebar, small dense rows that fit your whole feature list on one screen.</span></div>
+  <div class="card"><b>Smooth</b><span>Quint-eased tweens everywhere: switches, tab fades, minimize, toasts. Nothing snaps.</span></div>
+  <div class="card"><b>Rebindable keybinds</b><span>Every toggle takes a key. Click the KEY chip, press a key. Keybinds pause while you type.</span></div>
+  <div class="card"><b>Open source</b><span>Six small modules load straight from the repo. Push an update, every user gets it on next execute.</span></div>
+</div>
+
+<h2 id="intro">Introduction</h2>
+<p>Layfield is a UI library you drop into any Roblox executor script. You write features (toggles, sliders, buttons), it draws the window: dragging, keybinds, search, notifications, all handled. The library lives in this repo's <b>src/</b> modules and loads over the network, so pushing an update to the repo updates everyone using your loader.</p>
 <ul>
-  <li><b>Tabs</b> with a tab bar, plus a <b>live search box</b> that filters elements as you type</li>
-  <li><b>Toggle cards</b> with icon, ACTIVE/INACTIVE pill, animated switch and click-to-rebind keybind</li>
+  <li><b>Compact Rayfield-style window:</b> 520x340 by default, title bar, left tab sidebar, dense rows</li>
+  <li><b>Live search</b> in the sidebar filters the current tab's elements as you type</li>
+  <li><b>Toggle rows</b> with animated switch and rebindable keybind chip</li>
   <li><b>Buttons, sliders, dropdowns, text inputs, paragraphs, standalone keybinds</b></li>
-  <li><b>Toast notifications</b> with a countdown bar</li>
-  <li>Draggable window (clamped to screen), minimize button and a global toggle key (LeftControl by default)</li>
-  <li>Touch friendly: drag and tap work on mobile executors</li>
+  <li><b>Toast notifications</b> top right with a countdown bar</li>
+  <li>Touch friendly: drag and tap work on mobile executors, window stays clamped to screen</li>
 </ul>
 
 <h2 id="quickstart">Quick start</h2>
 <p>Three steps.</p>
-<ul>
-  <li><b>1.</b> Open your executor.</li>
-  <li><b>2.</b> Paste this one-liner to run the demo hub:</li>
-</ul>
+<ol>
+  <li><b>Open your executor.</b></li>
+  <li><b>Paste this one-liner</b> to run the demo hub:</li>
+</ol>
 <div class="code"><div class="bar"><span>lua</span><button onclick="cp(this)">copy</button></div>
 <pre>loadstring(game:HttpGet("https://raw.githubusercontent.com/kere0ne/Layfield/main/main.lua"))()</pre></div>
-<ul>
-  <li><b>3.</b> To build your own hub, open <b>main.lua</b> in the repo, edit the <b>CONFIG</b> table and the YOUR FEATURES block at the bottom, and paste the whole file instead. Look at <b>example.lua</b> for a full working demo you can copy from.</li>
-</ul>
+<ol start="3">
+  <li><b>Build your own hub:</b> open <b>main.lua</b> in the repo, edit the <b>CONFIG</b> table and the FEATURES block at the bottom, and paste the whole file. <b>example.lua</b> is a second demo you can copy from.</li>
+</ol>
 <div class="note">If the window does not appear, your executor may block <b>game:HttpGet</b> to raw.githubusercontent.com. Try another executor or self-host the modules (see Make it yours).</div>
 
-<h2 id="window">Window config</h2>
+<h2 id="window">Window</h2>
 <div class="code"><div class="bar"><span>lua</span><button onclick="cp(this)">copy</button></div>
 <pre>local Layfield = loadstring(game:HttpGet(
     "https://raw.githubusercontent.com/kere0ne/Layfield/main/src/init.lua"
 ))()
 
 local Window = Layfield:CreateWindow({
-    Name = "Example Hub",           -- header title
-    Subtitle = "example hub",   -- small text under the title
-    Version = "v3.0",               -- version pill
-    Icon = "E",                     -- letter in the accent badge
-    AccentColor = Color3.fromRGB(45, 145, 255),
+    Name = "Example Hub",            -- title bar text
+    Subtitle = "demo",               -- shown in toasts
+    Version = "v2.1",                -- version pill
+    Icon = "E",                      -- letter in the accent badge
+    AccentColor = Color3.fromRGB(68, 140, 255),
     ToggleKey = Enum.KeyCode.LeftControl,  -- key that minimizes the GUI
-    Width = 460,                    -- window width in pixels
-    DefaultTab = "Main",            -- name of the auto-created tab
+    Width = 520,                     -- window width, 380 to 760
+    Height = 340,                    -- window height, 260 to 600
+    DefaultTab = "Main",             -- auto-created tab name
 })</pre></div>
 <table>
   <tr><th>Field</th><th>What it does</th></tr>
-  <tr><td>Name</td><td>Window title in the header</td></tr>
-  <tr><td>Subtitle</td><td>Small line under the title</td></tr>
+  <tr><td>Name</td><td>Window title in the title bar</td></tr>
+  <tr><td>Subtitle</td><td>Small line shown in toasts</td></tr>
   <tr><td>Version</td><td>Text in the pill next to the title</td></tr>
   <tr><td>Icon</td><td>Letter inside the accent badge</td></tr>
-  <tr><td>AccentColor</td><td>Highlight color for switches, pills, sliders, active tab</td></tr>
+  <tr><td>AccentColor</td><td>Highlight color for switches, sliders, active tab</td></tr>
   <tr><td>ToggleKey</td><td>Key that minimizes/expands the whole window</td></tr>
-  <tr><td>Width</td><td>Window width, clamped between 320 and 760</td></tr>
+  <tr><td>Width / Height</td><td>Window size in pixels, clamped to sane ranges</td></tr>
   <tr><td>DefaultTab</td><td>The tab created automatically so window:Toggle() works directly</td></tr>
 </table>
 
 <h2 id="tabs">Tabs &amp; search</h2>
-<p>Tabs split your features into pages. A tab is an object: add elements to it with the same calls you use on the window.</p>
+<p>Tabs split your features into pages down the left sidebar. A tab is an object: add elements to it with the same calls you use on the window.</p>
 <div class="code"><div class="bar"><span>lua</span><button onclick="cp(this)">copy</button></div>
 <pre>local Movement = Window:Tab("Movement", "&gt;")   -- name, optional icon
 local Player   = Window:Tab("Player", "@")
@@ -144,14 +176,13 @@ Movement:Toggle({ Name = "Inf Jump", ... })
 Player:Slider({ Name = "Walk Speed", ... })
 
 Window:SelectTab(Utility)   -- switch pages from code</pre></div>
-<p>If you skip tabs entirely, a <b>Main</b> tab is created for you and <b>window:Toggle(...)</b> and friends go straight to it, so simple hubs need no tab code at all. The search box on the tab bar filters the current tab's elements live while you type.</p>
+<p>If you skip tabs entirely, a <b>Main</b> tab is created for you and <b>window:Toggle(...)</b> and friends go straight to it, so simple hubs need no tab code at all. The search box at the top of the sidebar filters the current tab's elements live while you type.</p>
 
 <h2 id="toggle">Toggle</h2>
-<p>A feature card: icon, name, status pill, animated switch and a rebindable keybind.</p>
+<p>A compact feature row: name, animated switch, rebindable keybind chip.</p>
 <div class="code"><div class="bar"><span>lua</span><button onclick="cp(this)">copy</button></div>
 <pre>local infJump = Window:Toggle({
-    Name = "Inf Jump",              -- card title (also what search matches)
-    Icon = "^",                     -- short glyph in the icon box
+    Name = "Inf Jump",              -- row title (also what search matches)
     Default = false,                -- starting state
     Keybind = Enum.KeyCode.I,       -- optional starting keybind
     Callback = function(state)      -- fires on every change, including keybind presses
@@ -168,7 +199,6 @@ infJump:SetKeybind(Enum.KeyCode.J)  -- change the keybind from code</pre></div>
 <div class="code"><div class="bar"><span>lua</span><button onclick="cp(this)">copy</button></div>
 <pre>Window:Button({
     Name = "Rejoin Server",
-    Icon = "&gt;",                 -- optional
     Callback = function()
         game:GetService("TeleportService"):Teleport(game.PlaceId, game.Players.LocalPlayer)
     end,
@@ -203,13 +233,13 @@ infJump:SetKeybind(Enum.KeyCode.J)  -- change the keybind from code</pre></div>
 })
 
 -- returned object: themePick:Set("Green"), themePick:Get()</pre></div>
-<p>The list opens under the card and closes when you pick an option or click anywhere else.</p>
+<p>The list opens under the row and closes when you pick an option or click anywhere else.</p>
 
 <h2 id="input">Input</h2>
 <div class="code"><div class="bar"><span>lua</span><button onclick="cp(this)">copy</button></div>
 <pre>Window:Input({
-    Name = "Webhook URL",
-    Placeholder = "https://discord.com/api/webhooks/...",
+    Name = "Custom Speed",
+    Placeholder = "16-100",
     Default = "",
     Callback = function(text, enterPressed)
         -- fires when the box loses focus; enterPressed is true on Enter
@@ -242,7 +272,7 @@ infJump:SetKeybind(Enum.KeyCode.J)  -- change the keybind from code</pre></div>
 <h2 id="sections">Section &amp; Label</h2>
 <div class="code"><div class="bar"><span>lua</span><button onclick="cp(this)">copy</button></div>
 <pre>Window:Section("Movement")     -- small uppercase divider heading
-Window:Label("drag the header to move the window")  -- dim helper text</pre></div>
+Window:Label("drag the title bar to move the window")  -- dim helper text</pre></div>
 
 <h2 id="notify">Notifications</h2>
 <div class="code"><div class="bar"><span>lua</span><button onclick="cp(this)">copy</button></div>
@@ -250,15 +280,15 @@ Window:Label("drag the header to move the window")  -- dim helper text</pre></di
     Title = "Example Hub",
     Text = "system online",
     Icon = "E",
-    Duration = 3,     -- seconds before it fades out
+    Duration = 4,     -- seconds before it fades out
 })</pre></div>
-<p>Toasts stack in the top center of the screen with a countdown bar and slide away on their own.</p>
+<p>Toasts stack in the top right of the screen with a countdown bar and slide away on their own.</p>
 
 <h2 id="shortcuts">Shortcuts</h2>
 <table>
   <tr><th>Input</th><th>Action</th></tr>
   <tr><td>LeftControl</td><td>Minimize / expand the window (configurable)</td></tr>
-  <tr><td>Drag header</td><td>Move the window (clamped to your screen)</td></tr>
+  <tr><td>Drag title bar</td><td>Move the window (clamped to your screen)</td></tr>
   <tr><td>Search box</td><td>Filter the current tab's elements live</td></tr>
   <tr><td>KEY chip</td><td>Rebind a toggle's keybind</td></tr>
 </table>
@@ -267,33 +297,33 @@ Window:Label("drag the header to move the window")  -- dim helper text</pre></di
 <p>Every color lives in <b>src/theme.lua</b>. Edit that one table and the whole library re-skins; it reloads from your repo on the next run. <b>AccentColor</b> in the window config overrides the accent per window without touching the theme file.</p>
 <div class="code"><div class="bar"><span>lua</span><button onclick="cp(this)">copy</button></div>
 <pre>return {
-    Window    = Color3.fromRGB(15, 17, 25),   -- window background
-    Header    = Color3.fromRGB(26, 30, 44),   -- header / tab bar / toasts
-    Card      = Color3.fromRGB(29, 33, 47),   -- element cards
-    CardHover = Color3.fromRGB(38, 43, 61),   -- hover state
-    Chip      = Color3.fromRGB(46, 52, 74),   -- pills, keybind chips, track
-    Stroke    = Color3.fromRGB(56, 62, 88),   -- card borders
-    Text      = Color3.fromRGB(238, 241, 250),
-    SubText   = Color3.fromRGB(146, 153, 178),
-    Off       = Color3.fromRGB(58, 64, 92),   -- switch when off
-    Accent    = Color3.fromRGB(52, 142, 255), -- default accent
+    Window    = Color3.fromRGB(14, 16, 24),   -- window background
+    Sidebar   = Color3.fromRGB(18, 21, 31),   -- tab sidebar
+    Header    = Color3.fromRGB(22, 25, 37),   -- title bar / toasts
+    Card      = Color3.fromRGB(26, 30, 43),   -- element rows
+    CardHover = Color3.fromRGB(34, 39, 56),   -- hover state
+    Chip      = Color3.fromRGB(42, 48, 68),   -- keybind chips, tracks
+    Stroke    = Color3.fromRGB(50, 56, 80),   -- borders
+    Text      = Color3.fromRGB(235, 239, 250),
+    SubText   = Color3.fromRGB(140, 147, 172),
+    Off       = Color3.fromRGB(52, 58, 84),   -- switch when off
+    Accent    = Color3.fromRGB(68, 140, 255), -- default accent
 }</pre></div>
 
 <h2 id="fullexample">Full example</h2>
-<p><b>example.lua</b> in the repo is a complete working hub with working Inf Jump and Anti Ragdoll. The core of it:</p>
+<p><b>example.lua</b> and the FEATURES block in <b>main.lua</b> are complete working demos with working Inf Jump and Anti Ragdoll. The core of it:</p>
 <div class="code"><div class="bar"><span>lua</span><button onclick="cp(this)">copy</button></div>
 <pre>local Window = Layfield:CreateWindow({
-    Name = "Example Hub", Subtitle = "example hub",
-    Version = "v3.0", Icon = "E",
-    AccentColor = Color3.fromRGB(45, 145, 255),
+    Name = "Example Hub", Version = "v2.1", Icon = "E",
+    AccentColor = Color3.fromRGB(68, 140, 255),
 })
 
-Window:Section("Movement")
+local Movement = Window:Tab("Movement")
 
-Window:Toggle({ Name = "Anti Bat", Icon = "&lt;&gt;", Keybind = Enum.KeyCode.O,
+Movement:Toggle({ Name = "Anti Bat", Keybind = Enum.KeyCode.O,
     Callback = function(state) --[[ your logic ]] end })
 
-Window:Toggle({ Name = "Anti Ragdoll", Icon = "o", Default = true, Keybind = Enum.KeyCode.R,
+Movement:Toggle({ Name = "Anti Ragdoll", Default = true, Keybind = Enum.KeyCode.R,
     Callback = function(state)
         local char = game.Players.LocalPlayer.Character
         local hum = char and char:FindFirstChildOfClass("Humanoid")
@@ -310,15 +340,18 @@ Window:Notify({ Title = "Example Hub", Text = "system online", Icon = "E" })</pr
 <h2 id="publish">Make it yours</h2>
 <ul>
   <li><b>Fork this repo</b> (or copy it) so the modules load from your account, then change the <b>kere0ne/Layfield</b> URL inside <b>src/init.lua</b> and in your loader to your own repo.</li>
-  <li><b>Rename it:</b> set Name, Subtitle, Icon and Version in main.lua's CONFIG table. That is your hub's branding.</li>
+  <li><b>Rename it:</b> set Name, Icon and Version in main.lua's CONFIG table. That is your hub's branding.</li>
   <li><b>Add features:</b> put your logic in the callbacks. Every element call returns an object with Set/Get so your scripts can read and drive the UI.</li>
   <li><b>Update safely:</b> because modules load from the repo, editing them on GitHub updates every user on their next execute. Test locally with a copy before pushing big changes.</li>
-  <li><b>Offline fallback:</b> if you need one file with no network, tell your users to paste src modules in reverse dependency order (theme, util, notify, elements, window, init) or host a bundle yourself.</li>
 </ul>
 
-<footer>Layfield docs, generated for the kere0ne/Layfield repo. Built with the Layfield UI library.</footer>
 </main>
 </div>
+<footer>
+  <span>Layfield, an open source UI library for Roblox scripts.</span>
+  <span style="flex:1"></span>
+  <a href="https://github.com/kere0ne/Layfield" style="color:var(--sub)">GitHub</a>
+</footer>
 <script>
 function cp(btn){
   var pre = btn.closest('.code').querySelector('pre');

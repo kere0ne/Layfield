@@ -1,7 +1,7 @@
 --[[
-	Layfield window.lua
-	Builds the window: header, tab bar with live search, draggable frame,
-	minimize/toggle key, toasts, then wires tabs to the element factories.
+	Layfield window.lua (v2.1, compact Rayfield-style layout)
+	Title bar on top, tab sidebar on the left with live search,
+	compact content rows. Smaller, denser, smoother.
 	deps: { Library, Theme, Util, fetch, config }
 ]]
 
@@ -14,11 +14,10 @@ return function(deps)
 	local PlayerGui = LocalPlayer:WaitForChild("PlayerGui")
 
 	local accent = config.AccentColor or Theme.Accent
-	local width = math.clamp(config.Width or 460, 320, 760)
-	local headerH = 62
-	local tabbarH = 40
-	local bodyH = 380
-	local contentY = headerH + tabbarH
+	local width = math.clamp(config.Width or 520, 380, 760)
+	local height = math.clamp(config.Height or 340, 260, 600)
+	local headerH = 40
+	local sidebarW = 132
 
 	local screenGui = Instance.new("ScreenGui")
 	screenGui.Name = "Layfield_" .. tostring(math.random(100000, 999999))
@@ -31,121 +30,118 @@ return function(deps)
 	main.Name = "Window"
 	main.AnchorPoint = Vector2.new(0.5, 0.5)
 	main.Position = UDim2.new(0.5, 0, 0.5, -20)
-	main.Size = UDim2.fromOffset(width, contentY + bodyH)
+	main.Size = UDim2.fromOffset(width, height)
 	main.BackgroundColor3 = Theme.Window
 	main.BorderSizePixel = 0
 	main.ClipsDescendants = true
-	Util.corner(main, 16)
-	Util.stroke(main, Theme.Stroke, 1, 0.4)
+	Util.corner(main, 10)
+	Util.stroke(main, Theme.Stroke, 1, 0.45)
 	main.Parent = screenGui
 
 	local scale = Instance.new("UIScale")
-	scale.Scale = 0.94
+	scale.Scale = 0.96
 	scale.Parent = main
-	Util.tween(scale, {Scale = 1}, 0.35, Enum.EasingStyle.Back)
+	Util.tween(scale, {Scale = 1}, 0.3, Enum.EasingStyle.Quint)
 
-	-- ---------- header ----------
+	-- ---------- title bar ----------
 	local header = Instance.new("Frame")
 	header.Name = "Header"
 	header.Size = UDim2.new(1, 0, 0, headerH)
 	header.BackgroundColor3 = Theme.Header
 	header.BorderSizePixel = 0
 	header.Parent = main
-	Util.corner(header, 16)
 
 	local badge = Instance.new("Frame")
-	badge.Size = UDim2.fromOffset(38, 38)
-	badge.Position = UDim2.fromOffset(12, 12)
+	badge.Size = UDim2.fromOffset(24, 24)
+	badge.Position = UDim2.fromOffset(9, 8)
 	badge.BackgroundColor3 = accent
 	badge.BorderSizePixel = 0
 	badge.Parent = header
-	Util.corner(badge, 12)
+	Util.corner(badge, 7)
 	Util.label(badge, {
-		Size = UDim2.fromScale(1, 1), Font = Enum.Font.GothamBold, TextSize = 18,
+		Size = UDim2.fromScale(1, 1), Font = Enum.Font.GothamBold, TextSize = 12,
 		TextColor3 = Color3.fromRGB(255, 255, 255), Text = config.Icon or "L",
 	})
 
 	Util.label(header, {
-		Position = UDim2.fromOffset(62, 11), Size = UDim2.new(1, -130, 0, 20),
-		Font = Enum.Font.GothamBold, TextSize = 18, TextColor3 = Theme.Text,
+		Position = UDim2.fromOffset(42, 0), Size = UDim2.new(1, -130, 1, 0),
+		Font = Enum.Font.GothamBold, TextSize = 14, TextColor3 = Theme.Text,
 		TextXAlignment = Enum.TextXAlignment.Left, Text = config.Name or "Layfield",
-	})
-	Util.label(header, {
-		Position = UDim2.fromOffset(62, 33), Size = UDim2.new(1, -130, 0, 14),
-		Font = Enum.Font.Gotham, TextSize = 12, TextColor3 = Theme.SubText,
-		TextXAlignment = Enum.TextXAlignment.Left, Text = config.Subtitle or "",
 	})
 
 	local versionPill = Instance.new("Frame")
-	versionPill.Size = UDim2.fromOffset(54, 22)
-	versionPill.Position = UDim2.new(1, -106, 0, 20)
+	versionPill.AnchorPoint = Vector2.new(1, 0.5)
+	versionPill.Position = UDim2.new(1, -40, 0.5, 0)
+	versionPill.Size = UDim2.fromOffset(42, 17)
 	versionPill.BackgroundColor3 = Theme.Chip
 	versionPill.BorderSizePixel = 0
 	versionPill.Parent = header
-	Util.corner(versionPill, 11)
+	Util.corner(versionPill, 5)
 	Util.label(versionPill, {
-		Size = UDim2.fromScale(1, 1), Font = Enum.Font.GothamBold, TextSize = 11,
-		TextColor3 = Theme.SubText, Text = config.Version or "v2.0",
+		Size = UDim2.fromScale(1, 1), Font = Enum.Font.GothamBold, TextSize = 9,
+		TextColor3 = Theme.SubText, Text = config.Version or "v2.1",
 	})
 
 	local minBtn = Instance.new("TextButton")
-	minBtn.Size = UDim2.fromOffset(30, 30)
-	minBtn.Position = UDim2.new(1, -42, 0, 16)
+	minBtn.AnchorPoint = Vector2.new(1, 0)
+	minBtn.Position = UDim2.new(1, -8, 0, 8)
+	minBtn.Size = UDim2.fromOffset(24, 24)
 	minBtn.BackgroundColor3 = Theme.Chip
 	minBtn.BorderSizePixel = 0
 	minBtn.Font = Enum.Font.GothamBold
-	minBtn.TextSize = 16
+	minBtn.TextSize = 13
 	minBtn.TextColor3 = Theme.Text
 	minBtn.Text = "-"
 	minBtn.AutoButtonColor = false
 	minBtn.Parent = header
-	Util.corner(minBtn, 10)
+	Util.corner(minBtn, 6)
 
-	-- ---------- tab bar + search ----------
-	local tabBar = Instance.new("Frame")
-	tabBar.Name = "TabBar"
-	tabBar.Position = UDim2.fromOffset(0, headerH)
-	tabBar.Size = UDim2.new(1, 0, 0, tabbarH)
-	tabBar.BackgroundColor3 = Theme.Header
-	tabBar.BackgroundTransparency = 0.35
-	tabBar.BorderSizePixel = 0
-	tabBar.Parent = main
-
-	local tabList = Instance.new("Frame")
-	tabList.BackgroundTransparency = 1
-	tabList.Size = UDim2.new(1, -170, 1, 0)
-	tabList.Parent = tabBar
-	local tabLayout = Instance.new("UIListLayout")
-	tabLayout.FillDirection = Enum.FillDirection.Horizontal
-	tabLayout.Padding = UDim.new(0, 6)
-	tabLayout.VerticalAlignment = Enum.VerticalAlignment.Center
-	tabLayout.SortOrder = Enum.SortOrder.LayoutOrder
-	tabLayout.Parent = tabList
-	local tabPad = Instance.new("UIPadding")
-	tabPad.PaddingLeft = UDim.new(0, 10)
-	tabPad.Parent = tabList
+	-- ---------- sidebar ----------
+	local sidebar = Instance.new("Frame")
+	sidebar.Name = "Sidebar"
+	sidebar.Position = UDim2.fromOffset(0, headerH)
+	sidebar.Size = UDim2.new(0, sidebarW, 0, height - headerH)
+	sidebar.BackgroundColor3 = Theme.Sidebar
+	sidebar.BorderSizePixel = 0
+	sidebar.Parent = main
 
 	local searchBox = Instance.new("TextBox")
 	searchBox.Name = "Search"
-	searchBox.AnchorPoint = Vector2.new(1, 0.5)
-	searchBox.Position = UDim2.new(1, -12, 0.5, 0)
-	searchBox.Size = UDim2.fromOffset(150, 26)
+	searchBox.Position = UDim2.fromOffset(8, 8)
+	searchBox.Size = UDim2.new(1, -16, 0, 24)
 	searchBox.BackgroundColor3 = Theme.Card
 	searchBox.BorderSizePixel = 0
 	searchBox.Font = Enum.Font.Gotham
-	searchBox.TextSize = 12
+	searchBox.TextSize = 11
 	searchBox.TextColor3 = Theme.Text
-	searchBox.PlaceholderText = "search elements..."
+	searchBox.PlaceholderText = "search..."
 	searchBox.PlaceholderColor3 = Theme.SubText
 	searchBox.Text = ""
 	searchBox.ClearTextOnFocus = false
-	searchBox.Parent = tabBar
-	Util.corner(searchBox, 8)
-	Util.stroke(searchBox, Theme.Stroke, 1, 0.5)
+	searchBox.Parent = sidebar
+	Util.corner(searchBox, 6)
 	local searchPad = Instance.new("UIPadding")
-	searchPad.PaddingLeft = UDim.new(0, 8)
-	searchPad.PaddingRight = UDim.new(0, 8)
+	searchPad.PaddingLeft = UDim.new(0, 7)
+	searchPad.PaddingRight = UDim.new(0, 7)
 	searchPad.Parent = searchBox
+
+	local tabList = Instance.new("Frame")
+	tabList.Name = "TabList"
+	tabList.Position = UDim2.fromOffset(0, 40)
+	tabList.Size = UDim2.new(1, 0, 1, -40)
+	tabList.BackgroundTransparency = 1
+	tabList.Parent = sidebar
+
+	local tabLayout = Instance.new("UIListLayout")
+	tabLayout.Padding = UDim.new(0, 3)
+	tabLayout.SortOrder = Enum.SortOrder.LayoutOrder
+	tabLayout.Parent = tabList
+
+	local tabPad = Instance.new("UIPadding")
+	tabPad.PaddingLeft = UDim.new(0, 8)
+	tabPad.PaddingRight = UDim.new(0, 8)
+	tabPad.PaddingTop = UDim.new(0, 4)
+	tabPad.Parent = tabList
 
 	-- ---------- tabs ----------
 	local tabs = {}
@@ -169,9 +165,11 @@ return function(deps)
 		for _, t in ipairs(tabs) do
 			t.frame.Visible = (t == tab)
 			if t == tab then
-				Util.tween(t.btn, {BackgroundColor3 = Theme.Chip, TextColor3 = accent})
+				t.selBar.Visible = true
+				Util.tween(t.btn, {BackgroundColor3 = Theme.Card, TextColor3 = Theme.Text})
 			else
-				Util.tween(t.btn, {BackgroundColor3 = Theme.Card, TextColor3 = Theme.SubText})
+				t.selBar.Visible = false
+				Util.tween(t.btn, {BackgroundColor3 = Theme.Sidebar, TextColor3 = Theme.SubText})
 			end
 		end
 		applySearch()
@@ -180,47 +178,70 @@ return function(deps)
 	function window:Tab(name, icon)
 		local frame = Instance.new("ScrollingFrame")
 		frame.Name = name or "Tab"
-		frame.Position = UDim2.fromOffset(0, contentY)
-		frame.Size = UDim2.new(1, 0, 0, bodyH)
+		frame.Position = UDim2.fromOffset(sidebarW, headerH)
+		frame.Size = UDim2.new(1, -sidebarW, 0, height - headerH)
 		frame.BackgroundTransparency = 1
 		frame.BorderSizePixel = 0
-		frame.ScrollBarThickness = 3
+		frame.ScrollBarThickness = 2
 		frame.ScrollBarImageColor3 = accent
 		frame.CanvasSize = UDim2.new(0, 0, 0, 0)
 		frame.AutomaticCanvasSize = Enum.AutomaticSize.Y
+		frame.Visible = false
 
 		local layout = Instance.new("UIListLayout")
-		layout.Padding = UDim.new(0, 8)
+		layout.Padding = UDim.new(0, 5)
 		layout.SortOrder = Enum.SortOrder.LayoutOrder
 		layout.Parent = frame
 
 		local pad = Instance.new("UIPadding")
-		pad.PaddingTop = UDim.new(0, 10)
+		pad.PaddingTop = UDim.new(0, 8)
 		pad.PaddingLeft = UDim.new(0, 10)
 		pad.PaddingRight = UDim.new(0, 10)
 		pad.PaddingBottom = UDim.new(0, 10)
 		pad.Parent = frame
 
 		local btn = Instance.new("TextButton")
-		btn.Size = UDim2.fromOffset(math.max(50, 18 + #(name or "") * 8), 26)
-		btn.BackgroundColor3 = Theme.Card
+		btn.Size = UDim2.new(1, 0, 0, 28)
+		btn.BackgroundColor3 = Theme.Sidebar
 		btn.BorderSizePixel = 0
 		btn.Font = Enum.Font.GothamBold
 		btn.TextSize = 12
 		btn.TextColor3 = Theme.SubText
-		btn.Text = (icon and (icon .. " ") or "") .. (name or "Tab")
-		btn.LayoutOrder = #tabs + 1
+		btn.Text = (icon and (icon .. "  ") or "") .. (name or "Tab")
 		btn.AutoButtonColor = false
+		btn.LayoutOrder = #tabs + 1
 		btn.Parent = tabList
-		Util.corner(btn, 8)
+		Util.corner(btn, 6)
 
-		local tab = {_frame = frame, frame = frame, btn = btn, _search = {}}
+		local selBar = Instance.new("Frame")
+		selBar.Size = UDim2.fromOffset(3, 14)
+		selBar.Position = UDim2.fromOffset(0, 7)
+		selBar.BackgroundColor3 = accent
+		selBar.BorderSizePixel = 0
+		selBar.Visible = false
+		selBar.Parent = btn
+		Util.corner(selBar, 2)
+		local btnPad = Instance.new("UIPadding")
+		btnPad.PaddingLeft = UDim.new(0, 10)
+		btnPad.Parent = btn
+
+		local tab = {_frame = frame, frame = frame, btn = btn, selBar = selBar, _search = {}}
 		local order = 0
 		function tab._nextOrder()
 			order = order + 1
 			return order
 		end
 
+		btn.MouseEnter:Connect(function()
+			if activeTab ~= tab then
+				Util.tween(btn, {BackgroundColor3 = Theme.Card}, 0.12)
+			end
+		end)
+		btn.MouseLeave:Connect(function()
+			if activeTab ~= tab then
+				Util.tween(btn, {BackgroundColor3 = Theme.Sidebar}, 0.12)
+			end
+		end)
 		btn.MouseButton1Click:Connect(function()
 			selectTab(tab)
 		end)
@@ -262,19 +283,21 @@ return function(deps)
 		minimized = v
 		minBtn.Text = v and "+" or "-"
 		if v then
-			Util.tween(main, {Size = UDim2.fromOffset(width, contentY)}, 0.3)
-			task.delay(0.3, function()
+			Util.tween(main, {Size = UDim2.fromOffset(width, headerH)}, 0.28, Enum.EasingStyle.Quint)
+			task.delay(0.28, function()
 				if minimized then
+					sidebar.Visible = false
 					for _, t in ipairs(tabs) do
 						t.frame.Visible = false
 					end
 				end
 			end)
 		else
+			sidebar.Visible = true
 			for _, t in ipairs(tabs) do
 				t.frame.Visible = (t == activeTab)
 			end
-			Util.tween(main, {Size = UDim2.fromOffset(width, contentY + bodyH)}, 0.3)
+			Util.tween(main, {Size = UDim2.fromOffset(width, height)}, 0.28, Enum.EasingStyle.Quint)
 		end
 	end
 
@@ -291,14 +314,17 @@ return function(deps)
 		end
 	end)
 
-	-- ---------- dragging (clamped to screen) ----------
+	-- ---------- dragging (header or sidebar, clamped to screen) ----------
 	local dragging = false
 	local dragStart, startPos
+	local function beginDrag(input)
+		dragging = true
+		dragStart = input.Position
+		startPos = main.Position
+	end
 	header.InputBegan:Connect(function(input)
 		if input.UserInputType == Enum.UserInputType.MouseButton1 or input.UserInputType == Enum.UserInputType.Touch then
-			dragging = true
-			dragStart = input.Position
-			startPos = main.Position
+			beginDrag(input)
 		end
 	end)
 	UserInputService.InputEnded:Connect(function(input)
@@ -311,24 +337,24 @@ return function(deps)
 			local delta = input.Position - dragStart
 			local cam = workspace.CurrentCamera
 			local vp = cam and cam.ViewportSize or Vector2.new(1920, 1080)
-			local x = math.clamp(startPos.X.Offset + delta.X, -vp.X / 2 + width * 0.35, vp.X / 2 - width * 0.35)
-			local y = math.clamp(startPos.Y.Offset + delta.Y, -vp.Y / 2 + 40, vp.Y / 2 - 40)
+			local x = math.clamp(startPos.X.Offset + delta.X, -vp.X / 2 + width * 0.4, vp.X / 2 - width * 0.4)
+			local y = math.clamp(startPos.Y.Offset + delta.Y, -vp.Y / 2 + 30, vp.Y / 2 - 30)
 			main.Position = UDim2.new(startPos.X.Scale, x, startPos.Y.Scale, y)
 		end
 	end)
 
-	-- ---------- toasts ----------
+	-- ---------- toasts (top right) ----------
 	local toastHolder = Instance.new("Frame")
 	toastHolder.Name = "Toasts"
-	toastHolder.AnchorPoint = Vector2.new(0.5, 0)
-	toastHolder.Position = UDim2.new(0.5, 0, 0, 14)
-	toastHolder.Size = UDim2.new(0, 340, 0, 0)
+	toastHolder.AnchorPoint = Vector2.new(1, 0)
+	toastHolder.Position = UDim2.new(1, -12, 0, 12)
+	toastHolder.Size = UDim2.new(0, 250, 0, 0)
 	toastHolder.AutomaticSize = Enum.AutomaticSize.Y
 	toastHolder.BackgroundTransparency = 1
 	toastHolder.Parent = screenGui
 
 	local toastLayout = Instance.new("UIListLayout")
-	toastLayout.Padding = UDim.new(0, 8)
+	toastLayout.Padding = UDim.new(0, 6)
 	toastLayout.SortOrder = Enum.SortOrder.LayoutOrder
 	toastLayout.Parent = toastHolder
 

@@ -1,5 +1,5 @@
 --[[
-	Layfield elements.lua
+	Layfield elements.lua (v2.1, compact Rayfield-style rows)
 	Registers the element factories on a tab:
 	Section, Label, Toggle, Button, Slider, Dropdown, Input, Paragraph, Keybind.
 	deps: { tab, frame, screenGui, Theme, Util, accent, search }
@@ -32,12 +32,12 @@ return function(deps)
 	-- ===== Section =====
 	function tab:Section(txt)
 		local f = Instance.new("Frame")
-		f.Size = UDim2.new(1, 0, 0, 20)
+		f.Size = UDim2.new(1, 0, 0, 18)
 		f.BackgroundTransparency = 1
 		register(f)
 		Util.label(f, {
 			Position = UDim2.fromOffset(2, 2), Size = UDim2.new(1, -4, 1, 0),
-			Font = Enum.Font.GothamBold, TextSize = 11, TextColor3 = Theme.SubText,
+			Font = Enum.Font.GothamBold, TextSize = 10, TextColor3 = Theme.SubText,
 			TextXAlignment = Enum.TextXAlignment.Left, Text = string.upper(txt or ""),
 		})
 	end
@@ -45,12 +45,12 @@ return function(deps)
 	-- ===== Label =====
 	function tab:Label(txt)
 		local f = Instance.new("Frame")
-		f.Size = UDim2.new(1, 0, 0, 18)
+		f.Size = UDim2.new(1, 0, 0, 14)
 		f.BackgroundTransparency = 1
 		register(f)
 		Util.label(f, {
 			Position = UDim2.fromOffset(2, 0), Size = UDim2.new(1, -4, 1, 0),
-			Font = Enum.Font.Gotham, TextSize = 12, TextColor3 = Theme.SubText,
+			Font = Enum.Font.Gotham, TextSize = 11, TextColor3 = Theme.SubText,
 			TextXAlignment = Enum.TextXAlignment.Left, Text = txt or "",
 		})
 	end
@@ -65,103 +65,61 @@ return function(deps)
 		card.Name = cfg.Name or "Toggle"
 		card.BackgroundColor3 = Theme.Card
 		card.BorderSizePixel = 0
-		card.Size = UDim2.new(1, 0, 0, 92)
+		card.Size = UDim2.new(1, 0, 0, 34)
 		card.AutoButtonColor = false
 		card.Text = ""
 		register(card, cfg.Name)
-		Util.corner(card, 12)
-		Util.stroke(card, Theme.Stroke, 1, 0.4)
-
-		local iconBox = Instance.new("Frame")
-		iconBox.Size = UDim2.fromOffset(40, 40)
-		iconBox.Position = UDim2.fromOffset(12, 14)
-		iconBox.BackgroundColor3 = Theme.Chip
-		iconBox.BorderSizePixel = 0
-		iconBox.Parent = card
-		Util.corner(iconBox, 11)
-		Util.label(iconBox, {
-			Size = UDim2.fromScale(1, 1), Font = Enum.Font.GothamBold, TextSize = 16,
-			TextColor3 = accent, Text = cfg.Icon or "-",
-		})
+		Util.corner(card, 7)
 
 		Util.label(card, {
-			Position = UDim2.fromOffset(62, 13), Size = UDim2.new(1, -140, 0, 18),
-			Font = Enum.Font.GothamBold, TextSize = 15, TextColor3 = Theme.Text,
-			TextXAlignment = Enum.TextXAlignment.Left, Text = cfg.Name or "Toggle",
+			Position = UDim2.fromOffset(11, 0), Size = UDim2.new(1, -130, 1, 0),
+			Font = Enum.Font.GothamMedium, TextSize = 13, TextColor3 = Theme.Text,
+			TextXAlignment = Enum.TextXAlignment.Left, TextTruncate = Enum.TextTruncate.AtEnd,
+			Text = cfg.Name or "Toggle",
 		})
 
-		local pill = Instance.new("Frame")
-		pill.Size = UDim2.fromOffset(92, 20)
-		pill.Position = UDim2.fromOffset(62, 36)
-		pill.BackgroundColor3 = Theme.Chip
-		pill.BorderSizePixel = 0
-		pill.Parent = card
-		Util.corner(pill, 10)
-		local pillDot = Instance.new("Frame")
-		pillDot.Size = UDim2.fromOffset(6, 6)
-		pillDot.Position = UDim2.fromOffset(9, 7)
-		pillDot.BackgroundColor3 = Theme.SubText
-		pillDot.BorderSizePixel = 0
-		pillDot.Parent = pill
-		Util.corner(pillDot, 3)
-		local pillText = Util.label(pill, {
-			Position = UDim2.fromOffset(20, 0), Size = UDim2.new(1, -24, 1, 0),
-			Font = Enum.Font.GothamBold, TextSize = 10, TextColor3 = Theme.SubText,
-			TextXAlignment = Enum.TextXAlignment.Left, Text = "INACTIVE",
-		})
-
-		local switch = Instance.new("Frame")
-		switch.Size = UDim2.fromOffset(46, 26)
-		switch.Position = UDim2.new(1, -58, 0, 14)
-		switch.BackgroundColor3 = Theme.Off
-		switch.BorderSizePixel = 0
-		switch.Parent = card
-		Util.corner(switch, 13)
-		local knob = Instance.new("Frame")
-		knob.Size = UDim2.fromOffset(20, 20)
-		knob.Position = UDim2.fromOffset(3, 3)
-		knob.BackgroundColor3 = Color3.fromRGB(255, 255, 255)
-		knob.BorderSizePixel = 0
-		knob.Parent = switch
-		Util.corner(knob, 10)
-
-		Util.label(card, {
-			Position = UDim2.fromOffset(62, 62), Size = UDim2.fromOffset(30, 14),
-			Font = Enum.Font.GothamBold, TextSize = 10, TextColor3 = Theme.SubText,
-			TextXAlignment = Enum.TextXAlignment.Left, Text = "KEY",
-		})
+		-- keybind chip
 		local chip = Instance.new("TextButton")
-		chip.Size = UDim2.fromOffset(54, 22)
-		chip.Position = UDim2.fromOffset(92, 59)
+		chip.AnchorPoint = Vector2.new(1, 0.5)
+		chip.Position = UDim2.new(1, -58, 0.5, 0)
+		chip.Size = UDim2.fromOffset(42, 18)
 		chip.BackgroundColor3 = Theme.Chip
 		chip.BorderSizePixel = 0
 		chip.Font = Enum.Font.GothamBold
-		chip.TextSize = 11
-		chip.TextColor3 = Theme.Text
+		chip.TextSize = 9
+		chip.TextColor3 = Theme.SubText
 		chip.Text = key and key.Name or "--"
 		chip.AutoButtonColor = false
 		chip.Parent = card
-		Util.corner(chip, 7)
-		Util.label(card, {
-			Position = UDim2.new(1, -14, 0, 63), Size = UDim2.fromOffset(120, 14),
-			Font = Enum.Font.Gotham, TextSize = 11, TextColor3 = Theme.SubText,
-			TextXAlignment = Enum.TextXAlignment.Right, Text = "click to rebind",
-		})
+		Util.corner(chip, 5)
+
+		-- switch
+		local switch = Instance.new("Frame")
+		switch.AnchorPoint = Vector2.new(1, 0.5)
+		switch.Position = UDim2.new(1, -10, 0.5, 0)
+		switch.Size = UDim2.fromOffset(34, 18)
+		switch.BackgroundColor3 = Theme.Off
+		switch.BorderSizePixel = 0
+		switch.Parent = card
+		Util.corner(switch, 9)
+		local knob = Instance.new("Frame")
+		knob.Size = UDim2.fromOffset(14, 14)
+		knob.Position = UDim2.fromOffset(2, 2)
+		knob.BackgroundColor3 = Color3.fromRGB(255, 255, 255)
+		knob.BorderSizePixel = 0
+		knob.Parent = switch
+		Util.corner(knob, 7)
 
 		local obj = {}
 		local function render()
 			if state then
-				Util.tween(switch, {BackgroundColor3 = accent})
-				Util.tween(knob, {Position = UDim2.fromOffset(23, 3)})
-				pillText.Text = "ACTIVE"
-				pillText.TextColor3 = accent
-				pillDot.BackgroundColor3 = accent
+				Util.tween(switch, {BackgroundColor3 = accent}, 0.18)
+				Util.tween(knob, {Position = UDim2.fromOffset(18, 2)}, 0.18)
+				chip.TextColor3 = accent
 			else
-				Util.tween(switch, {BackgroundColor3 = Theme.Off})
-				Util.tween(knob, {Position = UDim2.fromOffset(3, 3)})
-				pillText.Text = "INACTIVE"
-				pillText.TextColor3 = Theme.SubText
-				pillDot.BackgroundColor3 = Theme.SubText
+				Util.tween(switch, {BackgroundColor3 = Theme.Off}, 0.18)
+				Util.tween(knob, {Position = UDim2.fromOffset(2, 2)}, 0.18)
+				chip.TextColor3 = Theme.SubText
 			end
 		end
 
@@ -182,10 +140,10 @@ return function(deps)
 			obj:Set(not state)
 		end)
 		card.MouseEnter:Connect(function()
-			Util.tween(card, {BackgroundColor3 = Theme.CardHover}, 0.15)
+			Util.tween(card, {BackgroundColor3 = Theme.CardHover}, 0.12)
 		end)
 		card.MouseLeave:Connect(function()
-			Util.tween(card, {BackgroundColor3 = Theme.Card}, 0.15)
+			Util.tween(card, {BackgroundColor3 = Theme.Card}, 0.12)
 		end)
 
 		chip.MouseButton1Click:Connect(function()
@@ -221,26 +179,25 @@ return function(deps)
 		card.Name = cfg.Name or "Button"
 		card.BackgroundColor3 = Theme.Card
 		card.BorderSizePixel = 0
-		card.Size = UDim2.new(1, 0, 0, 44)
+		card.Size = UDim2.new(1, 0, 0, 30)
 		card.AutoButtonColor = false
-		card.Font = Enum.Font.GothamBold
-		card.TextSize = 14
+		card.Font = Enum.Font.GothamMedium
+		card.TextSize = 13
 		card.TextColor3 = Theme.Text
 		card.Text = (cfg.Icon and (cfg.Icon .. "  ") or "") .. (cfg.Name or "Button")
 		register(card, cfg.Name)
-		Util.corner(card, 11)
-		Util.stroke(card, Theme.Stroke, 1, 0.4)
+		Util.corner(card, 7)
 
 		card.MouseEnter:Connect(function()
-			Util.tween(card, {BackgroundColor3 = Theme.CardHover}, 0.15)
+			Util.tween(card, {BackgroundColor3 = Theme.CardHover}, 0.12)
 		end)
 		card.MouseLeave:Connect(function()
-			Util.tween(card, {BackgroundColor3 = Theme.Card}, 0.15)
+			Util.tween(card, {BackgroundColor3 = Theme.Card}, 0.12)
 		end)
 		card.MouseButton1Click:Connect(function()
-			Util.tween(card, {BackgroundColor3 = accent}, 0.08)
-			task.delay(0.08, function()
-				Util.tween(card, {BackgroundColor3 = Theme.CardHover}, 0.15)
+			Util.tween(card, {BackgroundColor3 = accent}, 0.07)
+			task.delay(0.07, function()
+				Util.tween(card, {BackgroundColor3 = Theme.CardHover}, 0.12)
 			end)
 			if cfg.Callback then cfg.Callback() end
 		end)
@@ -257,45 +214,45 @@ return function(deps)
 		card.Name = cfg.Name or "Slider"
 		card.BackgroundColor3 = Theme.Card
 		card.BorderSizePixel = 0
-		card.Size = UDim2.new(1, 0, 0, 64)
+		card.Size = UDim2.new(1, 0, 0, 42)
 		register(card, cfg.Name)
-		Util.corner(card, 11)
-		Util.stroke(card, Theme.Stroke, 1, 0.4)
+		Util.corner(card, 7)
 
 		Util.label(card, {
-			Position = UDim2.fromOffset(14, 8), Size = UDim2.new(1, -100, 0, 16),
-			Font = Enum.Font.GothamBold, TextSize = 13, TextColor3 = Theme.Text,
+			Position = UDim2.fromOffset(11, 5), Size = UDim2.new(1, -80, 0, 14),
+			Font = Enum.Font.GothamMedium, TextSize = 12, TextColor3 = Theme.Text,
 			TextXAlignment = Enum.TextXAlignment.Left, Text = cfg.Name or "Slider",
 		})
 		local valueText = Util.label(card, {
-			Position = UDim2.new(1, -90, 0, 8), Size = UDim2.fromOffset(76, 16),
-			Font = Enum.Font.GothamBold, TextSize = 13, TextColor3 = accent,
+			AnchorPoint = Vector2.new(1, 0),
+			Position = UDim2.new(1, -11, 0, 5), Size = UDim2.fromOffset(70, 14),
+			Font = Enum.Font.GothamBold, TextSize = 12, TextColor3 = accent,
 			TextXAlignment = Enum.TextXAlignment.Right, Text = tostring(value) .. suffix,
 		})
 
 		local trackBtn = Instance.new("TextButton")
-		trackBtn.BackgroundColor3 = Theme.Chip
+		trackBtn.BackgroundColor3 = Theme.Off
 		trackBtn.BorderSizePixel = 0
-		trackBtn.Size = UDim2.new(1, -28, 0, 6)
-		trackBtn.Position = UDim2.new(0, 14, 1, -18)
+		trackBtn.Size = UDim2.new(1, -22, 0, 4)
+		trackBtn.Position = UDim2.new(0, 11, 1, -13)
 		trackBtn.Text = ""
 		trackBtn.AutoButtonColor = false
 		trackBtn.Parent = card
-		Util.corner(trackBtn, 3)
+		Util.corner(trackBtn, 2)
 
 		local fill = Instance.new("Frame")
 		fill.BackgroundColor3 = accent
 		fill.BorderSizePixel = 0
 		fill.Size = UDim2.fromScale(0, 1)
 		fill.Parent = trackBtn
-		Util.corner(fill, 3)
+		Util.corner(fill, 2)
 
 		local knob = Instance.new("Frame")
-		knob.Size = UDim2.fromOffset(14, 14)
+		knob.Size = UDim2.fromOffset(10, 10)
 		knob.BackgroundColor3 = Color3.fromRGB(255, 255, 255)
 		knob.BorderSizePixel = 0
 		knob.Parent = card
-		Util.corner(knob, 7)
+		Util.corner(knob, 5)
 
 		local obj = {}
 		local function setP(p, fire)
@@ -309,7 +266,7 @@ return function(deps)
 			value = v
 			valueText.Text = tostring(v) .. suffix
 			fill.Size = UDim2.new(p, 0, 1, 0)
-			knob.Position = UDim2.new(p, -8, 0.5, -8)
+			knob.Position = UDim2.new(p, -6, 0.5, -6)
 			if fire and cfg.Callback then cfg.Callback(v) end
 		end
 
@@ -356,27 +313,27 @@ return function(deps)
 		card.Name = cfg.Name or "Dropdown"
 		card.BackgroundColor3 = Theme.Card
 		card.BorderSizePixel = 0
-		card.Size = UDim2.new(1, 0, 0, 46)
+		card.Size = UDim2.new(1, 0, 0, 32)
 		card.AutoButtonColor = false
 		card.Text = ""
 		register(card, cfg.Name)
-		Util.corner(card, 11)
-		Util.stroke(card, Theme.Stroke, 1, 0.4)
+		Util.corner(card, 7)
 
 		Util.label(card, {
-			Position = UDim2.fromOffset(14, 0), Size = UDim2.new(1, -120, 1, 0),
-			Font = Enum.Font.GothamBold, TextSize = 13, TextColor3 = Theme.Text,
-			TextXAlignment = Enum.TextXAlignment.Left, Text = cfg.Name or "Dropdown",
+			Position = UDim2.fromOffset(11, 0), Size = UDim2.new(1, -120, 1, 0),
+			Font = Enum.Font.GothamMedium, TextSize = 12, TextColor3 = Theme.Text,
+			TextXAlignment = Enum.TextXAlignment.Left, TextTruncate = Enum.TextTruncate.AtEnd,
+			Text = cfg.Name or "Dropdown",
 		})
 		local valueText = Util.label(card, {
-			Position = UDim2.new(1, -110, 0, 0), Size = UDim2.fromOffset(84, 46),
-			Font = Enum.Font.Gotham, TextSize = 12, TextColor3 = accent,
+			Position = UDim2.new(1, -108, 0, 0), Size = UDim2.fromOffset(84, 32),
+			Font = Enum.Font.Gotham, TextSize = 11, TextColor3 = accent,
 			TextXAlignment = Enum.TextXAlignment.Right, TextTruncate = Enum.TextTruncate.AtEnd,
 			Text = tostring(current),
 		})
 		local chevron = Util.label(card, {
-			Position = UDim2.new(1, -24, 0, 0), Size = UDim2.fromOffset(14, 46),
-			Font = Enum.Font.GothamBold, TextSize = 12, TextColor3 = Theme.SubText,
+			Position = UDim2.new(1, -20, 0, 0), Size = UDim2.fromOffset(10, 32),
+			Font = Enum.Font.GothamBold, TextSize = 10, TextColor3 = Theme.SubText,
 			TextXAlignment = Enum.TextXAlignment.Right, Text = "v",
 		})
 
@@ -412,12 +369,12 @@ return function(deps)
 			chevron.Text = "^"
 			popup = Instance.new("Frame")
 			popup.ZIndex = 10
-			popup.Position = UDim2.fromOffset(card.AbsolutePosition.X, card.AbsolutePosition.Y + card.AbsoluteSize.Y + 4)
-			popup.Size = UDim2.fromOffset(card.AbsoluteSize.X, math.min(#options, 8) * 34 + 12)
+			popup.Position = UDim2.fromOffset(card.AbsolutePosition.X, card.AbsolutePosition.Y + card.AbsoluteSize.Y + 3)
+			popup.Size = UDim2.fromOffset(card.AbsoluteSize.X, math.min(#options, 8) * 28 + 10)
 			popup.BackgroundColor3 = Theme.Header
 			popup.BorderSizePixel = 0
-			Util.corner(popup, 12)
-			Util.stroke(popup, Theme.Stroke, 1, 0.3)
+			Util.corner(popup, 8)
+			Util.stroke(popup, Theme.Stroke, 1, 0.35)
 			popup.Parent = screenGui
 
 			local pl = Instance.new("UIListLayout")
@@ -426,34 +383,34 @@ return function(deps)
 			pl.Parent = popup
 
 			local pp = Instance.new("UIPadding")
-			pp.PaddingTop = UDim.new(0, 6)
-			pp.PaddingLeft = UDim.new(0, 6)
-			pp.PaddingRight = UDim.new(0, 6)
+			pp.PaddingTop = UDim.new(0, 5)
+			pp.PaddingLeft = UDim.new(0, 5)
+			pp.PaddingRight = UDim.new(0, 5)
 			pp.Parent = popup
 
 			for i, opt in ipairs(options) do
 				local btn = Instance.new("TextButton")
-				btn.Size = UDim2.new(1, 0, 0, 32)
+				btn.Size = UDim2.new(1, 0, 0, 26)
 				btn.BackgroundColor3 = (opt == current) and Theme.Chip or Theme.Card
 				btn.BorderSizePixel = 0
 				btn.Font = Enum.Font.Gotham
-				btn.TextSize = 13
+				btn.TextSize = 12
 				btn.TextColor3 = (opt == current) and accent or Theme.Text
 				btn.Text = tostring(opt)
 				btn.AutoButtonColor = false
 				btn.LayoutOrder = i
 				btn.ZIndex = 11
-				Util.corner(btn, 8)
+				Util.corner(btn, 6)
 				btn.Parent = popup
 				btn.MouseButton1Click:Connect(function()
 					obj:Set(opt)
 					close()
 				end)
 				btn.MouseEnter:Connect(function()
-					Util.tween(btn, {BackgroundColor3 = Theme.CardHover}, 0.12)
+					Util.tween(btn, {BackgroundColor3 = Theme.CardHover}, 0.1)
 				end)
 				btn.MouseLeave:Connect(function()
-					Util.tween(btn, {BackgroundColor3 = (opt == current) and Theme.Chip or Theme.Card}, 0.12)
+					Util.tween(btn, {BackgroundColor3 = (opt == current) and Theme.Chip or Theme.Card}, 0.1)
 				end)
 			end
 
@@ -477,35 +434,35 @@ return function(deps)
 		card.Name = cfg.Name or "Input"
 		card.BackgroundColor3 = Theme.Card
 		card.BorderSizePixel = 0
-		card.Size = UDim2.new(1, 0, 0, 46)
+		card.Size = UDim2.new(1, 0, 0, 34)
 		register(card, cfg.Name)
-		Util.corner(card, 11)
-		Util.stroke(card, Theme.Stroke, 1, 0.4)
+		Util.corner(card, 7)
 
 		Util.label(card, {
-			Position = UDim2.fromOffset(14, 0), Size = UDim2.new(1, -170, 1, 0),
-			Font = Enum.Font.GothamBold, TextSize = 13, TextColor3 = Theme.Text,
-			TextXAlignment = Enum.TextXAlignment.Left, Text = cfg.Name or "Input",
+			Position = UDim2.fromOffset(11, 0), Size = UDim2.new(1, -170, 1, 0),
+			Font = Enum.Font.GothamMedium, TextSize = 12, TextColor3 = Theme.Text,
+			TextXAlignment = Enum.TextXAlignment.Left, TextTruncate = Enum.TextTruncate.AtEnd,
+			Text = cfg.Name or "Input",
 		})
 
 		local box = Instance.new("TextBox")
 		box.AnchorPoint = Vector2.new(1, 0.5)
-		box.Position = UDim2.new(1, -12, 0.5, 0)
-		box.Size = UDim2.fromOffset(150, 28)
+		box.Position = UDim2.new(1, -10, 0.5, 0)
+		box.Size = UDim2.fromOffset(150, 22)
 		box.BackgroundColor3 = Theme.Chip
 		box.BorderSizePixel = 0
 		box.Font = Enum.Font.Gotham
-		box.TextSize = 13
+		box.TextSize = 11
 		box.TextColor3 = Theme.Text
 		box.PlaceholderText = cfg.Placeholder or "type here..."
 		box.PlaceholderColor3 = Theme.SubText
 		box.Text = cfg.Default or ""
 		box.ClearTextOnFocus = false
 		box.Parent = card
-		Util.corner(box, 8)
+		Util.corner(box, 5)
 		local bpad = Instance.new("UIPadding")
-		bpad.PaddingLeft = UDim.new(0, 8)
-		bpad.PaddingRight = UDim.new(0, 8)
+		bpad.PaddingLeft = UDim.new(0, 7)
+		bpad.PaddingRight = UDim.new(0, 7)
 		bpad.Parent = box
 
 		box.FocusLost:Connect(function(enter)
@@ -533,25 +490,24 @@ return function(deps)
 		card.AutomaticSize = Enum.AutomaticSize.Y
 		card.Size = UDim2.new(1, 0, 0, 0)
 		register(card, cfg.Title)
-		Util.corner(card, 11)
-		Util.stroke(card, Theme.Stroke, 1, 0.4)
+		Util.corner(card, 7)
 
 		local cardPad = Instance.new("UIPadding")
-		cardPad.PaddingBottom = UDim.new(0, 10)
+		cardPad.PaddingBottom = UDim.new(0, 8)
 		cardPad.Parent = card
 
 		if cfg.Title then
 			Util.label(card, {
-				Position = UDim2.fromOffset(14, 10), Size = UDim2.new(1, -28, 0, 16),
-				Font = Enum.Font.GothamBold, TextSize = 13, TextColor3 = Theme.Text,
+				Position = UDim2.fromOffset(11, 8), Size = UDim2.new(1, -22, 0, 14),
+				Font = Enum.Font.GothamBold, TextSize = 12, TextColor3 = Theme.Text,
 				TextXAlignment = Enum.TextXAlignment.Left, Text = cfg.Title,
 			})
 		end
 		Util.label(card, {
-			Position = UDim2.fromOffset(14, cfg.Title and 30 or 10),
-			Size = UDim2.new(1, -28, 0, 0),
+			Position = UDim2.fromOffset(11, cfg.Title and 24 or 8),
+			Size = UDim2.new(1, -22, 0, 0),
 			AutomaticSize = Enum.AutomaticSize.Y,
-			Font = Enum.Font.Gotham, TextSize = 12, TextColor3 = Theme.SubText,
+			Font = Enum.Font.Gotham, TextSize = 11, TextColor3 = Theme.SubText,
 			TextXAlignment = Enum.TextXAlignment.Left, TextWrapped = true,
 			Text = cfg.Text or "",
 		})
@@ -566,30 +522,30 @@ return function(deps)
 		card.Name = cfg.Name or "Keybind"
 		card.BackgroundColor3 = Theme.Card
 		card.BorderSizePixel = 0
-		card.Size = UDim2.new(1, 0, 0, 46)
+		card.Size = UDim2.new(1, 0, 0, 32)
 		register(card, cfg.Name)
-		Util.corner(card, 11)
-		Util.stroke(card, Theme.Stroke, 1, 0.4)
+		Util.corner(card, 7)
 
 		Util.label(card, {
-			Position = UDim2.fromOffset(14, 0), Size = UDim2.new(1, -100, 1, 0),
-			Font = Enum.Font.GothamBold, TextSize = 13, TextColor3 = Theme.Text,
-			TextXAlignment = Enum.TextXAlignment.Left, Text = cfg.Name or "Keybind",
+			Position = UDim2.fromOffset(11, 0), Size = UDim2.new(1, -100, 1, 0),
+			Font = Enum.Font.GothamMedium, TextSize = 12, TextColor3 = Theme.Text,
+			TextXAlignment = Enum.TextXAlignment.Left, TextTruncate = Enum.TextTruncate.AtEnd,
+			Text = cfg.Name or "Keybind",
 		})
 
 		local chip = Instance.new("TextButton")
 		chip.AnchorPoint = Vector2.new(1, 0.5)
-		chip.Position = UDim2.new(1, -12, 0.5, 0)
-		chip.Size = UDim2.fromOffset(64, 26)
+		chip.Position = UDim2.new(1, -10, 0.5, 0)
+		chip.Size = UDim2.fromOffset(56, 20)
 		chip.BackgroundColor3 = Theme.Chip
 		chip.BorderSizePixel = 0
 		chip.Font = Enum.Font.GothamBold
-		chip.TextSize = 12
+		chip.TextSize = 10
 		chip.TextColor3 = Theme.Text
 		chip.Text = key and key.Name or "--"
 		chip.AutoButtonColor = false
 		chip.Parent = card
-		Util.corner(chip, 8)
+		Util.corner(chip, 5)
 
 		local obj = {}
 		chip.MouseButton1Click:Connect(function()

@@ -1,17 +1,18 @@
 --[[
-	CypherUI theme.lua
+	Layfield theme.lua
 	Re-skin the whole library here. Accent can also be set per-window.
 ]]
 
 return {
-	Window    = Color3.fromRGB(15, 17, 25),
-	Header    = Color3.fromRGB(26, 30, 44),
-	Card      = Color3.fromRGB(29, 33, 47),
-	CardHover = Color3.fromRGB(38, 43, 61),
-	Chip      = Color3.fromRGB(46, 52, 74),
-	Stroke    = Color3.fromRGB(56, 62, 88),
-	Text      = Color3.fromRGB(238, 241, 250),
-	SubText   = Color3.fromRGB(146, 153, 178),
-	Off       = Color3.fromRGB(58, 64, 92),
-	Accent    = Color3.fromRGB(52, 142, 255),
+	Window    = Color3.fromRGB(14, 16, 24),
+	Sidebar   = Color3.fromRGB(18, 21, 31),
+	Header    = Color3.fromRGB(22, 25, 37),
+	Card      = Color3.fromRGB(26, 30, 43),
+	CardHover = Color3.fromRGB(34, 39, 56),
+	Chip      = Color3.fromRGB(42, 48, 68),
+	Stroke    = Color3.fromRGB(50, 56, 80),
+	Text      = Color3.fromRGB(235, 239, 250),
+	SubText   = Color3.fromRGB(140, 147, 172),
+	Off       = Color3.fromRGB(52, 58, 84),
+	Accent    = Color3.fromRGB(68, 140, 255),
 }
