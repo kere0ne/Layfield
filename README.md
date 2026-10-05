@@ -32,10 +32,10 @@ Build your features under the YOUR FEATURES block in `main.lua`:
 
 ```lua
 local Window = Layfield:CreateWindow({
-    Name = "Kawatan Hub",
-    Subtitle = "anti-bat system",
+    Name = "Example Hub",
+    Subtitle = "example hub",
     Version = "v3.0",
-    Icon = "K",
+    Icon = "E",
     AccentColor = Color3.fromRGB(45, 145, 255),
     ToggleKey = Enum.KeyCode.LeftControl,
     Width = 460,
@@ -51,7 +51,7 @@ local myToggle = Window:Toggle({
     end,
 })
 
-Window:Notify({ Title = "Kawatan Hub", Text = "online", Icon = "K" })
+Window:Notify({ Title = "Example Hub", Text = "online", Icon = "E" })
 ```
 
 ## Highlights

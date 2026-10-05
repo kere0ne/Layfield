@@ -8,10 +8,10 @@
 ]]
 
 local CONFIG = {
-	Name = "Kawatan Hub",
-	Subtitle = "anti-bat system",
+	Name = "Example Hub",
+	Subtitle = "example hub",
 	Version = "v3.0",
-	Icon = "K",
+	Icon = "E",
 	AccentColor = Color3.fromRGB(45, 145, 255),
 	ToggleKey = Enum.KeyCode.LeftControl,
 	Width = 440,

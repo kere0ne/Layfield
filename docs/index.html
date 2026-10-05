@@ -112,10 +112,10 @@
 ))()
 
 local Window = Layfield:CreateWindow({
-    Name = "Kawatan Hub",           -- header title
-    Subtitle = "anti-bat system",   -- small text under the title
+    Name = "Example Hub",           -- header title
+    Subtitle = "example hub",   -- small text under the title
     Version = "v3.0",               -- version pill
-    Icon = "K",                     -- letter in the accent badge
+    Icon = "E",                     -- letter in the accent badge
     AccentColor = Color3.fromRGB(45, 145, 255),
     ToggleKey = Enum.KeyCode.LeftControl,  -- key that minimizes the GUI
     Width = 460,                    -- window width in pixels
@@ -247,9 +247,9 @@ Window:Label("drag the header to move the window")  -- dim helper text</pre></di
 <h2 id="notify">Notifications</h2>
 <div class="code"><div class="bar"><span>lua</span><button onclick="cp(this)">copy</button></div>
 <pre>Window:Notify({
-    Title = "Kawatan Hub",
-    Text = "Anti Bat system online",
-    Icon = "K",
+    Title = "Example Hub",
+    Text = "system online",
+    Icon = "E",
     Duration = 3,     -- seconds before it fades out
 })</pre></div>
 <p>Toasts stack in the top center of the screen with a countdown bar and slide away on their own.</p>
@@ -283,8 +283,8 @@ Window:Label("drag the header to move the window")  -- dim helper text</pre></di
 <p><b>example.lua</b> in the repo is a complete working hub with working Inf Jump and Anti Ragdoll. The core of it:</p>
 <div class="code"><div class="bar"><span>lua</span><button onclick="cp(this)">copy</button></div>
 <pre>local Window = Layfield:CreateWindow({
-    Name = "Kawatan Hub", Subtitle = "anti-bat system",
-    Version = "v3.0", Icon = "K",
+    Name = "Example Hub", Subtitle = "example hub",
+    Version = "v3.0", Icon = "E",
     AccentColor = Color3.fromRGB(45, 145, 255),
 })
 
@@ -305,7 +305,7 @@ Window:Toggle({ Name = "Anti Ragdoll", Icon = "o", Default = true, Keybind = Enu
 
 Window:Button({ Name = "Unload GUI", Callback = function() Layfield:Destroy() end })
 
-Window:Notify({ Title = "Kawatan Hub", Text = "Anti Bat system online", Icon = "K" })</pre></div>
+Window:Notify({ Title = "Example Hub", Text = "system online", Icon = "E" })</pre></div>
 
 <h2 id="publish">Make it yours</h2>
 <ul>
