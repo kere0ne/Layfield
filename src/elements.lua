@@ -262,7 +262,7 @@ return function(deps)
 		knob.Size = UDim2.fromOffset(10, 10)
 		knob.BackgroundColor3 = Color3.fromRGB(255, 255, 255)
 		knob.BorderSizePixel = 0
-		knob.Parent = card
+		knob.Parent = trackBtn
 		Util.corner(knob, 5)
 
 		local obj = {}
@@ -277,7 +277,7 @@ return function(deps)
 			value = v
 			valueText.Text = tostring(v) .. suffix
 			fill.Size = UDim2.new(p, 0, 1, 0)
-			knob.Position = UDim2.new(p, -6, 0.5, -6)
+			knob.Position = UDim2.new(p, -5, 0.5, -5)
 			if fire and cfg.Callback then cfg.Callback(v) end
 			if cfg.Flag and deps.onFlagChange then
 				deps.onFlagChange()
