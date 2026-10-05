@@ -1,16 +1,15 @@
 --[[
 	Layfield loader (main.lua)
-	Paste this whole file into your executor. It loads the library
-	from this repo and opens the demo hub below.
-	Edit CONFIG for your own branding, edit the FEATURES block
-	to build your own hub. Full docs: https://kere0ne.github.io/Layfield/
+	Paste this whole file into your executor.
+	Edit CONFIG for your branding, add your features in the FEATURES block.
+	Full docs: https://kere0ne.github.io/Layfield/
 ]]
 
 local CONFIG = {
-	Name = "Example Hub",
-	Subtitle = "demo",
-	Version = "v2.1",
-	Icon = "E",
+	Name = "Layfield",
+	Subtitle = "ui library",
+	Version = "v2.2",
+	Icon = "L",
 	AccentColor = Color3.fromRGB(68, 140, 255),
 	ToggleKey = Enum.KeyCode.LeftControl,
 	Width = 520,
@@ -27,177 +26,47 @@ local function loadLibrary()
 end
 
 local Layfield = loadLibrary()
-
 local Window = Layfield:CreateWindow(CONFIG)
 
 --========================================================================
 --  FEATURES
+--  Build your hub here. Templates for every element:
 --========================================================================
-local Players = game:GetService("Players")
-local UserInputService = game:GetService("UserInputService")
-local LocalPlayer = Players.LocalPlayer
-
-local function getHumanoid()
-	local char = LocalPlayer.Character
-	return char and char:FindFirstChildOfClass("Humanoid")
-end
-
--- Movement tab
+--[[
 local Movement = Window:Tab("Movement", ">")
 
-Movement:Paragraph({
-	Title = "Welcome",
-	Text = "Press LeftControl to hide the GUI. Click a KEY chip to rebind a feature.",
-})
-
--- Anti Bat (wire this to your game's logic)
 Movement:Toggle({
-	Name = "Anti Bat",
+	Name = "My Toggle",
+	Flag = "MyToggle",            -- optional: value saves and restores automatically
 	Default = false,
-	Keybind = Enum.KeyCode.O,
+	Keybind = Enum.KeyCode.F,
 	Callback = function(state)
-		-- put your anti-bat logic here
+		-- your logic
 	end,
 })
 
--- Inf Jump (working)
-do
-	local on = false
-	UserInputService.JumpRequest:Connect(function()
-		if not on then return end
-		local hum = getHumanoid()
-		if hum then
-			hum:ChangeState(Enum.HumanoidStateType.Jumping)
-		end
-	end)
-	Movement:Toggle({
-		Name = "Inf Jump",
-		Default = false,
-		Keybind = Enum.KeyCode.I,
-		Callback = function(state)
-			on = state
-		end,
-	})
-end
+Movement:Slider({ Name = "My Slider", Min = 0, Max = 100, Default = 50, Callback = function(v) end })
+Movement:Dropdown({ Name = "My Dropdown", Options = {"A", "B", "C"}, Callback = function(opt) end })
+Movement:Input({ Name = "My Input", Placeholder = "...", Callback = function(text, enter) end })
+Movement:Keybind({ Name = "My Keybind", Default = Enum.KeyCode.G, Callback = function() end })
+Movement:Button({ Name = "My Button", Callback = function() end })
+Movement:Paragraph({ Title = "Notes", Text = "multi-line text block" })
 
--- Anti Ragdoll (working, survives respawn)
-do
-	local enabled = false
-	local function apply(char)
-		local hum = char:WaitForChild("Humanoid", 5)
-		if not hum then return end
-		hum:SetStateEnabled(Enum.HumanoidStateType.Ragdoll, not enabled)
-		hum:SetStateEnabled(Enum.HumanoidStateType.FallingDown, not enabled)
-		hum.StateChanged:Connect(function(_, new)
-			if enabled and (new == Enum.HumanoidStateType.Ragdoll or new == Enum.HumanoidStateType.FallingDown) then
-				hum:ChangeState(Enum.HumanoidStateType.GettingUp)
-			end
-		end)
-	end
-	if LocalPlayer.Character then
-		task.spawn(apply, LocalPlayer.Character)
-	end
-	LocalPlayer.CharacterAdded:Connect(function(char)
-		task.spawn(apply, char)
-	end)
-	Movement:Toggle({
-		Name = "Anti Ragdoll",
-		Default = true,
-		Keybind = Enum.KeyCode.R,
-		Callback = function(state)
-			enabled = state
-			local hum = getHumanoid()
-			if hum then
-				hum:SetStateEnabled(Enum.HumanoidStateType.Ragdoll, not state)
-				hum:SetStateEnabled(Enum.HumanoidStateType.FallingDown, not state)
-			end
-		end,
-	})
-end
+Window:Button({ Name = "Unload GUI", Callback = function() Layfield:Destroy() end })
+]]
 
--- Player tab
-local PlayerTab = Window:Tab("Player", "@")
-
-PlayerTab:Slider({
-	Name = "Walk Speed",
-	Min = 16,
-	Max = 100,
-	Default = 16,
-	Callback = function(v)
-		local hum = getHumanoid()
-		if hum then
-			hum.WalkSpeed = v
-		end
-	end,
+Window:Paragraph({
+	Title = "Your features go here",
+	Text = "Open main.lua and add features in the FEATURES block. Full docs: kere0ne.github.io/Layfield",
 })
 
-PlayerTab:Dropdown({
-	Name = "Jump Style",
-	Options = {"Normal", "Low", "Moon"},
-	Default = "Normal",
-	Callback = function(opt)
-		local hum = getHumanoid()
-		if hum then
-			if opt == "Low" then
-				hum.UseJumpPower = true
-				hum.JumpPower = 30
-			elseif opt == "Moon" then
-				hum.UseJumpPower = true
-				hum.JumpPower = 100
-			else
-				hum.UseJumpPower = true
-				hum.JumpPower = 50
-			end
-		end
-	end,
-})
-
-PlayerTab:Input({
-	Name = "Custom Speed",
-	Placeholder = "16-100",
-	Callback = function(text, enter)
-		local n = tonumber(text)
-		if n and enter then
-			local hum = getHumanoid()
-			if hum then
-				hum.WalkSpeed = math.clamp(n, 0, 500)
-			end
-		end
-	end,
-})
-
-PlayerTab:Keybind({
-	Name = "Reset Character",
-	Default = Enum.KeyCode.P,
-	Callback = function()
-		local char = LocalPlayer.Character
-		local hum = char and char:FindFirstChildOfClass("Humanoid")
-		if hum then
-			hum.Health = 0
-		end
-	end,
-})
-
--- Utility tab
-local Utility = Window:Tab("Utility")
-
-Utility:Button({
-	Name = "Rejoin Server",
-	Callback = function()
-		game:GetService("TeleportService"):Teleport(game.PlaceId, LocalPlayer)
-	end,
-})
-
-Utility:Button({
+Window:Button({
 	Name = "Unload GUI",
 	Callback = function()
 		Layfield:Destroy()
 	end,
 })
 
---========================================================================
---  STARTUP
---========================================================================
 Window:Notify({
 	Title = CONFIG.Name,
 	Text = "loaded, " .. Layfield.Version,

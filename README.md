@@ -9,7 +9,6 @@ A modern, open script hub UI framework for Roblox (Luau). Rayfield-style layout,
 ```
 Layfield/
 ├── main.lua           # loader: paste this into your executor
-├── example.lua        # full working demo (toggles, slider, dropdown, buttons)
 ├── docs/index.html    # the docs site (GitHub Pages)
 └── src/
     ├── init.lua       # library entry, fetches modules from this repo
@@ -22,19 +21,19 @@ Layfield/
 
 ## Quick start
 
-Paste `main.lua` into your executor, or run the demo directly:
+Paste `main.lua` into your executor, or run it directly:
 
 ```lua
 loadstring(game:HttpGet("https://raw.githubusercontent.com/kere0ne/Layfield/main/main.lua"))()
 ```
 
-Build your features under the YOUR FEATURES block in `main.lua`:
+Build your features under the FEATURES block in `main.lua` (templates for every element are in there):
 
 ```lua
 local Window = Layfield:CreateWindow({
-    Name = "Example Hub",
+    Name = "Layfield",
     Subtitle = "example hub",
-    Version = "v3.0",
+    Version = "v2.2",
     Icon = "E",
     AccentColor = Color3.fromRGB(45, 145, 255),
     ToggleKey = Enum.KeyCode.LeftControl,
@@ -51,7 +50,7 @@ local myToggle = Window:Toggle({
     end,
 })
 
-Window:Notify({ Title = "Example Hub", Text = "online", Icon = "E" })
+Window:Notify({ Title = "Layfield", Text = "online", Icon = "E" })
 ```
 
 ## Highlights
