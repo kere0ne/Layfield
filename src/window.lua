@@ -79,7 +79,7 @@ return function(deps)
 	Util.corner(versionPill, 5)
 	Util.label(versionPill, {
 		Size = UDim2.fromScale(1, 1), Font = Enum.Font.GothamBold, TextSize = 9,
-		TextColor3 = Theme.SubText, Text = config.Version or "v2.1",
+		TextColor3 = Theme.SubText, Text = config.Version or "v2.2",
 	})
 
 	local minBtn = Instance.new("TextButton")
@@ -151,6 +151,66 @@ return function(deps)
 	window._gui = screenGui
 	window._accent = accent
 
+	window._flags = {}
+
+	-- config saving (Rayfield-style flags, stored via writefile when available)
+	local HttpService = game:GetService("HttpService")
+	local hasFS = (type(writefile) == "function") and (type(isfolder) == "function")
+		and (type(makefolder) == "function") and (type(readfile) == "function")
+	local saveScheduled = false
+	local function ensureFolders()
+		pcall(function()
+			if not isfolder("Layfield") then makefolder("Layfield") end
+			if not isfolder("Layfield/Configs") then makefolder("Layfield/Configs") end
+		end)
+	end
+	local function saveConfig(cfgName)
+		if not hasFS then return end
+		ensureFolders()
+		local data = {}
+		for flag, obj in pairs(window._flags) do
+			local ok, v = pcall(obj.Get)
+			if ok then
+				data[flag] = v
+			end
+		end
+		pcall(function()
+			writefile("Layfield/Configs/" .. tostring(cfgName) .. ".json", HttpService:JSONEncode(data))
+		end)
+	end
+	local function loadConfig(cfgName)
+		if not hasFS then return end
+		local ok, contents = pcall(readfile, "Layfield/Configs/" .. tostring(cfgName) .. ".json")
+		if not ok or type(contents) ~= "string" then return end
+		local ok2, data = pcall(function()
+			return HttpService:JSONDecode(contents)
+		end)
+		if not ok2 or type(data) ~= "table" then return end
+		for flag, v in pairs(data) do
+			local obj = window._flags[flag]
+			if obj then
+				pcall(function()
+					obj:Set(v)
+				end)
+			end
+		end
+	end
+	local function queueSave()
+		if not hasFS then return end
+		if saveScheduled then return end
+		saveScheduled = true
+		task.delay(0.5, function()
+			saveScheduled = false
+			saveConfig(config.ConfigName or "default")
+		end)
+	end
+	window.SaveConfig = function(_, name)
+		saveConfig(name or config.ConfigName or "default")
+	end
+	window.LoadConfig = function(_, name)
+		loadConfig(name or config.ConfigName or "default")
+	end
+
 	local function applySearch()
 		if not activeTab then return end
 		local q = string.lower(searchBox.Text)
@@ -187,6 +247,7 @@ return function(deps)
 		frame.CanvasSize = UDim2.new(0, 0, 0, 0)
 		frame.AutomaticCanvasSize = Enum.AutomaticSize.Y
 		frame.Visible = false
+		frame.Parent = main
 
 		local layout = Instance.new("UIListLayout")
 		layout.Padding = UDim.new(0, 5)
@@ -255,6 +316,8 @@ return function(deps)
 			Util = Util,
 			accent = accent,
 			search = tab._search,
+			registry = window._flags,
+			onFlagChange = queueSave,
 		})
 
 		table.insert(tabs, tab)
@@ -343,6 +406,50 @@ return function(deps)
 		end
 	end)
 
+
+	-- ---------- floating open/close bubble (mobile friendly) ----------
+	if config.ShowMobileButton ~= false then
+		local bubble = Instance.new("TextButton")
+		bubble.Name = "OpenButton"
+		bubble.AnchorPoint = Vector2.new(0.5, 0.5)
+		bubble.Position = UDim2.new(1, -30, 1, -30)
+		bubble.Size = UDim2.fromOffset(34, 34)
+		bubble.BackgroundColor3 = accent
+		bubble.BorderSizePixel = 0
+		bubble.Font = Enum.Font.GothamBold
+		bubble.TextSize = 14
+		bubble.TextColor3 = Color3.fromRGB(255, 255, 255)
+		bubble.Text = "-"
+		bubble.AutoButtonColor = false
+		bubble.Parent = screenGui
+		Util.corner(bubble, 17)
+
+		local bDrag = false
+		local bStart, bPos
+		bubble.InputBegan:Connect(function(input)
+			if input.UserInputType == Enum.UserInputType.MouseButton1 or input.UserInputType == Enum.UserInputType.Touch then
+				bDrag = true
+				bStart = input.Position
+				bPos = bubble.Position
+			end
+		end)
+		UserInputService.InputEnded:Connect(function(input)
+			if input.UserInputType == Enum.UserInputType.MouseButton1 or input.UserInputType == Enum.UserInputType.Touch then
+				bDrag = false
+			end
+		end)
+		UserInputService.InputChanged:Connect(function(input)
+			if bDrag and (input.UserInputType == Enum.UserInputType.MouseMovement or input.UserInputType == Enum.UserInputType.Touch) then
+				local delta = input.Position - bStart
+				bubble.Position = UDim2.new(bPos.X.Scale, bPos.X.Offset + delta.X, bPos.Y.Scale, bPos.Y.Offset + delta.Y)
+			end
+		end)
+		bubble.MouseButton1Click:Connect(function()
+			setMinimized(not minimized)
+		end)
+		window._bubble = bubble
+	end
+
 	-- ---------- toasts (top right) ----------
 	local toastHolder = Instance.new("Frame")
 	toastHolder.Name = "Toasts"
@@ -362,6 +469,14 @@ return function(deps)
 	local Notify = notifyModule({holder = toastHolder, Theme = Theme, Util = Util, accent = accent})
 	window.Notify = function(_, cfg)
 		Notify.make(cfg or {})
+	end
+
+
+	-- restore saved config shortly after startup, once features exist
+	if config.SaveConfigs ~= false then
+		task.delay(1, function()
+			loadConfig(config.ConfigName or "default")
+		end)
 	end
 
 	return window

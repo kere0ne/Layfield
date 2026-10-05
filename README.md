@@ -60,7 +60,8 @@ Window:Notify({ Title = "Example Hub", Text = "online", Icon = "E" })
 - **Live search**: the search box on the tab bar filters the current tab as you type.
 - **Keybinds**: every toggle takes a keybind, rebindable by clicking the KEY chip. Keybinds pause while you're typing anywhere.
 - **Object API**: every element returns an object with `:Set()`, `:Get()` (and more) so your scripts can drive the UI.
-- **Mobile friendly**: touch drag and tap both work; the window clamps to your screen when dragged.
+- **Config saving**: Rayfield-style flags. Add `Flag = "name"` to a toggle/slider/dropdown/input and values persist to a local config file, restored on next launch. `Window:SaveConfig(name)` / `Window:LoadConfig(name)` for manual control.
+- **Mobile friendly**: touch drag and tap both work; the window clamps to your screen when dragged; draggable open/close bubble (disable with `ShowMobileButton = false`).
 - **Repo-loaded modules**: edits pushed to src/ propagate to every user on their next execute.
 
 ## API
@@ -78,4 +79,5 @@ Window:Notify({ Title = "Example Hub", Text = "online", Icon = "E" })
 | `Window:Section(txt)` / `Window:Label(txt)` | Dividers and helper text |
 | `Window:Notify(cfg)` | Toast `{Title, Text, Icon, Duration}` |
 | `Window:SelectTab(tab)` | Switch pages from code |
+| `Window:SaveConfig(name)` / `Window:LoadConfig(name)` | Config persistence via flags |
 | `Layfield:Destroy()` | Unloads every Layfield window |

@@ -169,6 +169,17 @@ return function(deps)
 			end
 		end)
 
+		if cfg.Flag and deps.registry then
+			deps.registry[cfg.Flag] = obj
+			local rawSet = obj.Set
+			function obj:Set(v)
+				rawSet(v)
+				if deps.onFlagChange then
+					deps.onFlagChange()
+				end
+			end
+		end
+
 		render()
 		return obj
 	end
@@ -268,6 +279,9 @@ return function(deps)
 			fill.Size = UDim2.new(p, 0, 1, 0)
 			knob.Position = UDim2.new(p, -6, 0.5, -6)
 			if fire and cfg.Callback then cfg.Callback(v) end
+			if cfg.Flag and deps.onFlagChange then
+				deps.onFlagChange()
+			end
 		end
 
 		local sliding = false
@@ -425,6 +439,17 @@ return function(deps)
 			end)
 		end)
 
+		if cfg.Flag and deps.registry then
+			deps.registry[cfg.Flag] = obj
+			local rawSet = obj.Set
+			function obj:Set(v)
+				rawSet(v)
+				if deps.onFlagChange then
+					deps.onFlagChange()
+				end
+			end
+		end
+
 		return obj
 	end
 
@@ -478,6 +503,18 @@ return function(deps)
 		function obj:Get()
 			return box.Text
 		end
+
+		if cfg.Flag and deps.registry then
+			deps.registry[cfg.Flag] = obj
+			local rawSet = obj.Set
+			function obj:Set(v)
+				rawSet(v)
+				if deps.onFlagChange then
+					deps.onFlagChange()
+				end
+			end
+		end
+
 		return obj
 	end
 

@@ -64,7 +64,7 @@
 <header>
   <div class="topbar">
     <div class="logo"><div class="mark">L</div>Layfield</div>
-    <span class="ver">v2.1</span>
+    <span class="ver">v2.2</span>
     <div class="spacer"></div>
     <a class="nav" href="#quickstart">Get started</a>
     <a class="nav" href="https://github.com/kere0ne/Layfield">GitHub</a>
@@ -145,7 +145,7 @@
 local Window = Layfield:CreateWindow({
     Name = "Example Hub",            -- title bar text
     Subtitle = "demo",               -- shown in toasts
-    Version = "v2.1",                -- version pill
+    Version = "v2.2",                -- version pill
     Icon = "E",                      -- letter in the accent badge
     AccentColor = Color3.fromRGB(68, 140, 255),
     ToggleKey = Enum.KeyCode.LeftControl,  -- key that minimizes the GUI
@@ -163,6 +163,9 @@ local Window = Layfield:CreateWindow({
   <tr><td>ToggleKey</td><td>Key that minimizes/expands the whole window</td></tr>
   <tr><td>Width / Height</td><td>Window size in pixels, clamped to sane ranges</td></tr>
   <tr><td>DefaultTab</td><td>The tab created automatically so window:Toggle() works directly</td></tr>
+  <tr><td>SaveConfigs</td><td>Set false to disable config saving (default on, needs writefile)</td></tr>
+  <tr><td>ConfigName</td><td>Config file name, default "default"</td></tr>
+  <tr><td>ShowMobileButton</td><td>Set false to hide the draggable open/close bubble</td></tr>
 </table>
 
 <h2 id="tabs">Tabs &amp; search</h2>
@@ -291,7 +294,22 @@ Window:Label("drag the title bar to move the window")  -- dim helper text</pre><
   <tr><td>Drag title bar</td><td>Move the window (clamped to your screen)</td></tr>
   <tr><td>Search box</td><td>Filter the current tab's elements live</td></tr>
   <tr><td>KEY chip</td><td>Rebind a toggle's keybind</td></tr>
+  <tr><td>Floating bubble</td><td>Draggable button that opens/closes the GUI (hide with ShowMobileButton = false)</td></tr>
 </table>
+
+<h2 id="configs">Config saving</h2>
+<p>Rayfield-style flag saving. Give any toggle, slider, dropdown or input a <b>Flag</b> name and its value is saved to a local config file (via writefile, when your executor supports it) and restored automatically the next time the hub loads.</p>
+<div class="code"><div class="bar"><span>lua</span><button onclick="cp(this)">copy</button></div>
+<pre>Window:Toggle({
+    Name = "Inf Jump",
+    Flag = "InfJump",          -- value saved/restored under this name
+    Default = false,
+    Callback = function(state) end,
+})
+
+Window:SaveConfig("myconfig")   -- save now under a custom name
+Window:LoadConfig("myconfig")   -- load a saved config from code</pre></div>
+<p>Saving is debounced (half a second after the last change) and restore happens about a second after startup, once your features exist. Turning SaveConfigs off in the window config disables it entirely.</p>
 
 <h2 id="theming">Theming</h2>
 <p>Every color lives in <b>src/theme.lua</b>. Edit that one table and the whole library re-skins; it reloads from your repo on the next run. <b>AccentColor</b> in the window config overrides the accent per window without touching the theme file.</p>
@@ -314,7 +332,7 @@ Window:Label("drag the title bar to move the window")  -- dim helper text</pre><
 <p><b>example.lua</b> and the FEATURES block in <b>main.lua</b> are complete working demos with working Inf Jump and Anti Ragdoll. The core of it:</p>
 <div class="code"><div class="bar"><span>lua</span><button onclick="cp(this)">copy</button></div>
 <pre>local Window = Layfield:CreateWindow({
-    Name = "Example Hub", Version = "v2.1", Icon = "E",
+    Name = "Example Hub", Version = "v2.2", Icon = "E",
     AccentColor = Color3.fromRGB(68, 140, 255),
 })
 
