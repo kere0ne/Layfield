@@ -1,15 +1,15 @@
 --[[
-	Layfield loader (main.lua)
+	Example loader (main.lua)
 	Paste this whole file into your executor.
 	Edit CONFIG for your branding, add your features in the FEATURES block.
-	Full docs: https://kere0ne.github.io/Layfield/
+	Full docs: https://kere0ne.github.io/Example/
 ]]
 
 local CONFIG = {
-	Name = "Layfield",
+	Name = "Example Hub",
 	Subtitle = "ui library",
 	Version = "v2.3",
-	Icon = "L",
+	Icon = "E",
 	AccentColor = Color3.fromRGB(68, 140, 255),
 	ToggleKey = Enum.KeyCode.LeftControl,
 	Width = 520,
@@ -17,16 +17,16 @@ local CONFIG = {
 }
 
 local function loadLibrary()
-	local src = game:HttpGet("https://raw.githubusercontent.com/kere0ne/Layfield/main/src/init.lua")
+	local src = game:HttpGet("https://raw.githubusercontent.com/kere0ne/Example/main/src/init.lua")
 	local fn, err = loadstring(src)
 	if not fn then
-		error("[Layfield] failed to compile init.lua: " .. tostring(err))
+		error("[Example] failed to compile init.lua: " .. tostring(err))
 	end
 	return fn()
 end
 
-local Layfield = loadLibrary()
-local Window = Layfield:CreateWindow(CONFIG)
+local Example = loadLibrary()
+local Window = Example:CreateWindow(CONFIG)
 
 --========================================================================
 --  FEATURES
@@ -52,7 +52,7 @@ Movement:Keybind({ Name = "My Keybind", Default = Enum.KeyCode.G, Callback = fun
 Movement:Button({ Name = "My Button", Callback = function() end })
 Movement:Paragraph({ Title = "Notes", Text = "multi-line text block" })
 
-Window:Button({ Name = "Unload GUI", Callback = function() Layfield:Destroy() end })
+Window:Button({ Name = "Unload GUI", Callback = function() Example:Destroy() end })
 
 -- Mobile quick-action panel (draggable button grid, Left or Right):
 local Panel = Window:MobilePanel({ Side = "Right" })
@@ -64,19 +64,19 @@ Panel:SetVisible(true)       -- or false to hide it
 
 Window:Paragraph({
 	Title = "Your features go here",
-	Text = "Open main.lua and add features in the FEATURES block. Full docs: kere0ne.github.io/Layfield",
+	Text = "Open main.lua and add features in the FEATURES block. Full docs: kere0ne.github.io/Example",
 })
 
 Window:Button({
 	Name = "Unload GUI",
 	Callback = function()
-		Layfield:Destroy()
+		Example:Destroy()
 	end,
 })
 
 Window:Notify({
 	Title = CONFIG.Name,
-	Text = "loaded, " .. Layfield.Version,
+	Text = "loaded, " .. Example.Version,
 	Icon = CONFIG.Icon,
 	Duration = 4,
 })

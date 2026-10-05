@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Layfield, the better UI library for Roblox scripts</title>
+<title>Example, the better UI library for Roblox scripts</title>
 <style>
   :root{
     --bg:#ffffff; --bg2:#fafafa; --border:#eaebee; --text:#111318; --sub:#5b6270;
@@ -63,11 +63,11 @@
 <body>
 <header>
   <div class="topbar">
-    <div class="logo"><div class="mark">L</div>Layfield</div>
+    <div class="logo"><div class="mark">L</div>Example</div>
     <span class="ver">v2.3</span>
     <div class="spacer"></div>
     <a class="nav" href="#quickstart">Get started</a>
-    <a class="nav" href="https://github.com/kere0ne/Layfield">GitHub</a>
+    <a class="nav" href="https://github.com/kere0ne/Example">GitHub</a>
   </div>
 </header>
 <div class="wrap">
@@ -99,10 +99,10 @@
 
 <div class="hero">
   <h1>The better UI library for Roblox scripts</h1>
-  <p>Layfield is a compact, smooth interface suite for executor scripts. Rayfield-style layout, rebuilt smaller and faster: tabs with live search, animated toggles, rebindable keybinds and toast notifications, all open source.</p>
+  <p>Example is a compact, smooth interface suite for executor scripts. Rayfield-style layout, rebuilt smaller and faster: tabs with live search, animated toggles, rebindable keybinds and toast notifications, all open source.</p>
   <div class="cta">
     <a class="btn" href="#quickstart">Get started</a>
-    <a class="btn ghost" href="https://github.com/kere0ne/Layfield">View source</a>
+    <a class="btn ghost" href="https://github.com/kere0ne/Example">View source</a>
   </div>
 </div>
 
@@ -114,7 +114,7 @@
 </div>
 
 <h2 id="intro">Introduction</h2>
-<p>Layfield is a UI library you drop into any Roblox executor script. You write features (toggles, sliders, buttons), it draws the window: dragging, keybinds, search, notifications, all handled. The library lives in this repo's <b>src/</b> modules and loads over the network, so pushing an update to the repo updates everyone using your loader.</p>
+<p>Example is a UI library you drop into any Roblox executor script. You write features (toggles, sliders, buttons), it draws the window: dragging, keybinds, search, notifications, all handled. The library lives in this repo's <b>src/</b> modules and loads over the network, so pushing an update to the repo updates everyone using your loader.</p>
 <ul>
   <li><b>Compact Rayfield-style window:</b> 520x340 by default, title bar, left tab sidebar, dense rows</li>
   <li><b>Live search</b> in the sidebar filters the current tab's elements as you type</li>
@@ -131,7 +131,7 @@
   <li><b>Paste this one-liner</b> to run the demo hub:</li>
 </ol>
 <div class="code"><div class="bar"><span>lua</span><button onclick="cp(this)">copy</button></div>
-<pre>loadstring(game:HttpGet("https://raw.githubusercontent.com/kere0ne/Layfield/main/main.lua"))()</pre></div>
+<pre>loadstring(game:HttpGet("https://raw.githubusercontent.com/kere0ne/Example/main/main.lua"))()</pre></div>
 <ol start="3">
   <li><b>Build your own hub:</b> open <b>main.lua</b> in the repo, edit the <b>CONFIG</b> table and the FEATURES block at the bottom, and paste the whole file. The templates in there cover every element.</li>
 </ol>
@@ -139,12 +139,12 @@
 
 <h2 id="window">Window</h2>
 <div class="code"><div class="bar"><span>lua</span><button onclick="cp(this)">copy</button></div>
-<pre>local Layfield = loadstring(game:HttpGet(
-    "https://raw.githubusercontent.com/kere0ne/Layfield/main/src/init.lua"
+<pre>local Example = loadstring(game:HttpGet(
+    "https://raw.githubusercontent.com/kere0ne/Example/main/src/init.lua"
 ))()
 
-local Window = Layfield:CreateWindow({
-    Name = "My Hub",            -- title bar text
+local Window = Example:CreateWindow({
+    Name = "Example Hub",            -- title bar text
     Subtitle = "demo",               -- shown in toasts
     Version = "v2.3",                -- version pill
     Icon = "E",                      -- letter in the accent badge
@@ -295,7 +295,7 @@ Panel:Destroy()</pre></div>
 <h2 id="notify">Notifications</h2>
 <div class="code"><div class="bar"><span>lua</span><button onclick="cp(this)">copy</button></div>
 <pre>Window:Notify({
-    Title = "My Hub",
+    Title = "Example Hub",
     Text = "system online",
     Icon = "E",
     Duration = 4,     -- seconds before it fades out
@@ -346,8 +346,8 @@ Window:LoadConfig("myconfig")   -- load a saved config from code</pre></div>
 <h2 id="fullexample">Feature templates</h2>
 <p>Every element in one place, ready to paste into the FEATURES block in <b>main.lua</b>:</p>
 <div class="code"><div class="bar"><span>lua</span><button onclick="cp(this)">copy</button></div>
-<pre>local Window = Layfield:CreateWindow({
-    Name = "My Hub", Version = "v2.3", Icon = "E",
+<pre>local Window = Example:CreateWindow({
+    Name = "Example Hub", Version = "v2.3", Icon = "E",
     AccentColor = Color3.fromRGB(68, 140, 255),
 })
 
@@ -366,13 +366,13 @@ Movement:Toggle({ Name = "Anti Ragdoll", Default = true, Keybind = Enum.KeyCode.
         end
     end })
 
-Window:Button({ Name = "Unload GUI", Callback = function() Layfield:Destroy() end })
+Window:Button({ Name = "Unload GUI", Callback = function() Example:Destroy() end })
 
-Window:Notify({ Title = "My Hub", Text = "system online", Icon = "E" })</pre></div>
+Window:Notify({ Title = "Example Hub", Text = "system online", Icon = "E" })</pre></div>
 
 <h2 id="publish">Make it yours</h2>
 <ul>
-  <li><b>Fork this repo</b> (or copy it) so the modules load from your account, then change the <b>kere0ne/Layfield</b> URL inside <b>src/init.lua</b> and in your loader to your own repo.</li>
+  <li><b>Fork this repo</b> (or copy it) so the modules load from your account, then change the <b>kere0ne/Example</b> URL inside <b>src/init.lua</b> and in your loader to your own repo.</li>
   <li><b>Rename it:</b> set Name, Icon and Version in main.lua's CONFIG table. That is your hub's branding.</li>
   <li><b>Add features:</b> put your logic in the callbacks. Every element call returns an object with Set/Get so your scripts can read and drive the UI.</li>
   <li><b>Update safely:</b> because modules load from the repo, editing them on GitHub updates every user on their next execute. Test locally with a copy before pushing big changes.</li>
@@ -381,9 +381,9 @@ Window:Notify({ Title = "My Hub", Text = "system online", Icon = "E" })</pre></d
 </main>
 </div>
 <footer>
-  <span>Layfield, an open source UI library for Roblox scripts.</span>
+  <span>Example, an open source UI library for Roblox scripts.</span>
   <span style="flex:1"></span>
-  <a href="https://github.com/kere0ne/Layfield" style="color:var(--sub)">GitHub</a>
+  <a href="https://github.com/kere0ne/Example" style="color:var(--sub)">GitHub</a>
 </footer>
 <script>
 function cp(btn){

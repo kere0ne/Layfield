@@ -1,5 +1,5 @@
 --[[
-	Layfield elements.lua (v2.1, compact Rayfield-style rows)
+	Example elements.lua (v2.1, compact Rayfield-style rows)
 	Registers the element factories on a tab:
 	Section, Label, Toggle, Button, Slider, Dropdown, Input, Paragraph, Keybind.
 	deps: { tab, frame, screenGui, Theme, Util, accent, search }

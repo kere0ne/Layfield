@@ -1,5 +1,5 @@
 --[[
-	Layfield mobile.lua
+	Example mobile.lua
 	Mobile quick-action panel: a draggable grid of big rounded buttons
 	floating over gameplay (like mobile game hubs).
 	deps: { screenGui, Theme, Util, accent }
