@@ -1,5 +1,5 @@
 --[[
-	Example theme.lua
+	LayField theme.lua
 	Re-skin the whole library here. Accent can also be set per-window.
 ]]
 

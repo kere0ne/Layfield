@@ -1,13 +1,13 @@
-# Example Hub
+# LayField
 
 A modern, open script hub UI framework for Roblox (Luau). Rayfield-style layout, rebuilt better: tabs with live search, animated toggles with rebindable keybinds, sliders, dropdowns, text inputs, paragraphs, standalone keybinds and toast notifications.
 
-**Docs & guides: https://kere0ne.github.io/Example/**
+**Docs & guides: https://kere0ne.github.io/LayField/**
 
 ## Structure
 
 ```
-Example/
+LayField/
 ├── main.lua           # loader: paste this into your executor
 ├── docs/index.html    # the docs site (GitHub Pages)
 └── src/
@@ -25,14 +25,14 @@ Example/
 Paste `main.lua` into your executor, or run it directly:
 
 ```lua
-loadstring(game:HttpGet("https://raw.githubusercontent.com/kere0ne/Example/main/main.lua"))()
+loadstring(game:HttpGet("https://raw.githubusercontent.com/kere0ne/LayField/main/main.lua"))()
 ```
 
 Build your features under the FEATURES block in `main.lua` (templates for every element are in there):
 
 ```lua
-local Window = Example:CreateWindow({
-    Name = "Example",
+local Window = LayField:CreateWindow({
+    Name = "LayField",
     Subtitle = "example hub",
     Version = "v2.3",
     Icon = "E",
@@ -51,7 +51,7 @@ local myToggle = Window:Toggle({
     end,
 })
 
-Window:Notify({ Title = "Example", Text = "online", Icon = "E" })
+Window:Notify({ Title = "LayField", Text = "online", Icon = "E" })
 ```
 
 ## Highlights
@@ -81,4 +81,4 @@ Window:Notify({ Title = "Example", Text = "online", Icon = "E" })
 | `Window:Notify(cfg)` | Toast `{Title, Text, Icon, Duration}` |
 | `Window:SelectTab(tab)` | Switch pages from code |
 | `Window:SaveConfig(name)` / `Window:LoadConfig(name)` | Config persistence via flags |
-| `Example:Destroy()` | Unloads every Example window |
+| `LayField:Destroy()` | Unloads every LayField window |

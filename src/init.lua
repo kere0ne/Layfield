@@ -1,14 +1,14 @@
 --[[
-	Example init.lua
+	LayField init.lua
 	Entry module. Fetches the other modules from this repo and
-	returns the Example library table.
+	returns the LayField library table.
 ]]
 
-local Example = {}
-Example.__index = Example
-Example.Version = "2.0.0"
+local LayField = {}
+LayField.__index = LayField
+LayField.Version = "2.0.0"
 
-local BASE = "https://raw.githubusercontent.com/kere0ne/Example/main/src/"
+local BASE = "https://raw.githubusercontent.com/kere0ne/LayField/main/src/"
 local cache = {}
 
 local function fetch(name)
@@ -18,34 +18,34 @@ local function fetch(name)
 	local src = game:HttpGet(BASE .. name .. ".lua")
 	local fn, err = loadstring(src)
 	if not fn then
-		error("[Example] failed to load module '" .. name .. "': " .. tostring(err))
+		error("[LayField] failed to load module '" .. name .. "': " .. tostring(err))
 	end
 	local mod = fn()
 	cache[name] = mod
 	return mod
 end
 
-Example.Theme = fetch("theme")
-Example.Util = fetch("util")(Example.Theme)
+LayField.Theme = fetch("theme")
+LayField.Util = fetch("util")(LayField.Theme)
 
-function Example:CreateWindow(config)
+function LayField:CreateWindow(config)
 	local windowFactory = fetch("window")
 	return windowFactory({
-		Library = Example,
-		Theme = Example.Theme,
-		Util = Example.Util,
+		Library = LayField,
+		Theme = LayField.Theme,
+		Util = LayField.Util,
 		fetch = fetch,
 		config = config,
 	})
 end
 
-function Example:Destroy()
+function LayField:Destroy()
 	local PlayerGui = game:GetService("Players").LocalPlayer:WaitForChild("PlayerGui")
 	for _, gui in ipairs(PlayerGui:GetChildren()) do
-		if gui:IsA("ScreenGui") and string.find(gui.Name, "Example_") == 1 then
+		if gui:IsA("ScreenGui") and string.find(gui.Name, "LayField_") == 1 then
 			gui:Destroy()
 		end
 	end
 end
 
-return Example
+return LayField

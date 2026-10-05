@@ -1,5 +1,5 @@
 --[[
-	Example notify.lua
+	LayField notify.lua
 	Compact toast notifications, top right, with countdown bar.
 	deps: { holder, Theme, Util, accent }
 ]]

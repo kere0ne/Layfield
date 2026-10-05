@@ -1,5 +1,5 @@
 --[[
-	Example window.lua (v2.1, compact Rayfield-style layout)
+	LayField window.lua (v2.1, compact Rayfield-style layout)
 	Title bar on top, tab sidebar on the left with live search,
 	compact content rows. Smaller, denser, smoother.
 	deps: { Library, Theme, Util, fetch, config }
@@ -20,7 +20,7 @@ return function(deps)
 	local sidebarW = 132
 
 	local screenGui = Instance.new("ScreenGui")
-	screenGui.Name = "Example_" .. tostring(math.random(100000, 999999))
+	screenGui.Name = "LayField_" .. tostring(math.random(100000, 999999))
 	screenGui.ResetOnSpawn = false
 	screenGui.IgnoreGuiInset = true
 	screenGui.ZIndexBehavior = Enum.ZIndexBehavior.Sibling
@@ -66,7 +66,7 @@ return function(deps)
 	Util.label(header, {
 		Position = UDim2.fromOffset(42, 0), Size = UDim2.new(1, -130, 1, 0),
 		Font = Enum.Font.GothamBold, TextSize = 14, TextColor3 = Theme.Text,
-		TextXAlignment = Enum.TextXAlignment.Left, Text = config.Name or "Example",
+		TextXAlignment = Enum.TextXAlignment.Left, Text = config.Name or "LayField",
 	})
 
 	local versionPill = Instance.new("Frame")
@@ -160,8 +160,8 @@ return function(deps)
 	local saveScheduled = false
 	local function ensureFolders()
 		pcall(function()
-			if not isfolder("Example") then makefolder("Example") end
-			if not isfolder("Example/Configs") then makefolder("Example/Configs") end
+			if not isfolder("LayField") then makefolder("LayField") end
+			if not isfolder("LayField/Configs") then makefolder("LayField/Configs") end
 		end)
 	end
 	local function saveConfig(cfgName)
@@ -175,12 +175,12 @@ return function(deps)
 			end
 		end
 		pcall(function()
-			writefile("Example/Configs/" .. tostring(cfgName) .. ".json", HttpService:JSONEncode(data))
+			writefile("LayField/Configs/" .. tostring(cfgName) .. ".json", HttpService:JSONEncode(data))
 		end)
 	end
 	local function loadConfig(cfgName)
 		if not hasFS then return end
-		local ok, contents = pcall(readfile, "Example/Configs/" .. tostring(cfgName) .. ".json")
+		local ok, contents = pcall(readfile, "LayField/Configs/" .. tostring(cfgName) .. ".json")
 		if not ok or type(contents) ~= "string" then return end
 		local ok2, data = pcall(function()
 			return HttpService:JSONDecode(contents)
